@@ -1,0 +1,35 @@
+[2015-11-11 22:03:02,424][WARN ][discovery.zen.ping.multicast] [Pryde, Katherine "Kitty"] failed to read requesting data from /192.168.1.2:54328
+java.io.IOException: Expected handle header, got [13]
+	at org.elasticsearch.common.io.stream.HandlesStreamInput.readString(HandlesStreamInput.java:65)
+	at org.elasticsearch.cluster.ClusterName.readFrom(ClusterName.java:64)
+	at org.elasticsearch.cluster.ClusterName.readClusterName(ClusterName.java:58)
+	at org.elasticsearch.discovery.zen.ping.multicast.MulticastZenPing$Receiver.run(MulticastZenPing.java:409)
+	at java.lang.Thread.run(Thread.java:745)
+[2015-11-11 22:03:03,933][WARN ][discovery.zen.ping.multicast] [Pryde, Katherine "Kitty"] failed to read requesting data from /192.168.1.2:54328
+java.io.IOException: Expected handle header, got [13]
+	at org.elasticsearch.common.io.stream.HandlesStreamInput.readString(HandlesStreamInput.java:65)
+	at org.elasticsearch.cluster.ClusterName.readFrom(ClusterName.java:64)
+	at org.elasticsearch.cluster.ClusterName.readClusterName(ClusterName.java:58)
+	at org.elasticsearch.discovery.zen.ping.multicast.MulticastZenPing$Receiver.run(MulticastZenPing.java:409)
+	at java.lang.Thread.run(Thread.java:745)
+[2015-11-11 22:07:42,463][WARN ][discovery.zen.ping.multicast] [Pryde, Katherine "Kitty"] failed to read requesting data from /192.168.1.2:54328
+java.io.IOException: Expected handle header, got [13]
+	at org.elasticsearch.common.io.stream.HandlesStreamInput.readString(HandlesStreamInput.java:65)
+	at org.elasticsearch.cluster.ClusterName.readFrom(ClusterName.java:64)
+	at org.elasticsearch.cluster.ClusterName.readClusterName(ClusterName.java:58)
+	at org.elasticsearch.discovery.zen.ping.multicast.MulticastZenPing$Receiver.run(MulticastZenPing.java:409)
+	at java.lang.Thread.run(Thread.java:745)
+[2015-11-11 22:07:43,973][WARN ][discovery.zen.ping.multicast] [Pryde, Katherine "Kitty"] failed to read requesting data from /192.168.1.2:54328
+java.io.IOException: Expected handle header, got [13]
+	at org.elasticsearch.common.io.stream.HandlesStreamInput.readString(HandlesStreamInput.java:65)
+	at org.elasticsearch.cluster.ClusterName.readFrom(ClusterName.java:64)
+	at org.elasticsearch.cluster.ClusterName.readClusterName(ClusterName.java:58)
+	at org.elasticsearch.discovery.zen.ping.multicast.MulticastZenPing$Receiver.run(MulticastZenPing.java:409)
+	at java.lang.Thread.run(Thread.java:745)
+[2015-11-11 22:07:45,475][WARN ][discovery.zen.ping.multicast] [Pryde, Katherine "Kitty"] failed to read requesting data from /192.168.1.2:54328
+java.io.IOException: Expected handle header, got [13]
+	at org.elasticsearch.common.io.stream.HandlesStreamInput.readString(HandlesStreamInput.java:65)
+	at org.elasticsearch.cluster.ClusterName.readFrom(ClusterName.java:64)
+	at org.elasticsearch.cluster.ClusterName.readClusterName(ClusterName.java:58)
+	at org.elasticsearch.discovery.zen.ping.multicast.MulticastZenPing$Receiver.run(MulticastZenPing.java:409)
+	at java.lang.Thread.run(Thread.java:745)
