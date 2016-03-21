@@ -4,14 +4,19 @@ var gulp = require('gulp'),
     webserver = require('gulp-webserver'),
     sass = require('gulp-sass'),
     concat = require('gulp-concat'),
-    babel = require('gulp-babel'),
     uglify = require('gulp-uglify'),
     jasmine = require('gulp-jasmine');
 
-gulp.task('react', function () {
-    gulp.src('./src/jsx/**/*.jsx')
-      .pipe(babel())
-      .pipe(gulp.dest('./src/js'))
+var browserify = require('browserify');
+var babelify = require('babelify');
+var source = require('vinyl-source-stream');
+
+gulp.task('build', function () {
+    return browserify({entries: './src/jsx/app.jsx', extensions: ['.jsx'], debug: true})
+        .transform('babelify', {presets: ['es2015', 'react']})
+        .bundle()
+        .pipe(source('bundle.js'))
+        .pipe(gulp.dest('./build/js'));
 });
 
 gulp.task('javascript', function () {
@@ -44,9 +49,9 @@ gulp.task('webserver', function() {
     }));
 });
 
-gulp.task('default', ['sass', 'react', 'javascript']);
+gulp.task('default', ['sass', 'build', 'javascript']);
 
-gulp.task('watch', ['sass', 'react', 'webserver'], function () {
+gulp.task('watch', ['sass', 'build', 'webserver'], function () {
   gulp.watch('./src/scss/**/*.scss' , ['sass']);
-  gulp.watch('./src/jsx/**/*.jsx' , ['react']);
+  gulp.watch('./src/jsx/**/*.jsx' , ['build']);
 });

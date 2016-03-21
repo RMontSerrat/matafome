@@ -1,16 +1,23 @@
-var List = React.createClass({
-    getInitialState: function getInitialState() {
-        return {
+import React from 'react';
+import Header from './header';
+
+class List extends React.Component {
+    constructor(props) {
+        super(props);
+        
+        this.state = {
             podrao: this.props.data.podroes[0]._source,
             i: 0,
             loader: true,
             directionsService: new google.maps.DirectionsService(),
             directionsDisplay: new google.maps.DirectionsRenderer(),
-            latlng: new google.maps.LatLng(this.props.crd.latitude, this.props.crd.longitude)
-        }
-    },
+            latlng: new google.maps.LatLng(this.props.crd.latitude, this.props.crd.longitude),
+            buttonValue: this.setButtonValue(),
+            ticketValue: this.setTicketValue()
+        };
+    };
 
-    update: function update() {
+    update() {
         var i = this.state.i;
 
         if(i >= this.props.data.podroes.length-1) {
@@ -19,22 +26,35 @@ var List = React.createClass({
 
         this.setState({
             podrao: this.props.data.podroes[i+1]._source,
-            i: i+1
+            i: i+1,
+            buttonValue: this.setButtonValue(),
+            ticketValue: this.setTicketValue()
         });
-    },
+    };
 
-    renderCard: function renderCard() {
+    setButtonValue() {
+        return config.button[Math.floor(Math.random() * config.button.length)]
+    };
+
+    setTicketValue() {
+        return config.good[Math.floor(Math.random() * config.good.length)]
+    };
+
+    renderCard() {
         var podrao = this.state.podrao;
-        
+
         return (
-            <div>
+            <div className="card-informations">
                 <h1>{podrao.name}</h1>
                 <p>{podrao.vicinity}</p>
+                <div className="ticket ticket-card">
+                    <p><span>{this.state.ticketValue}</span></p>
+                </div>
             </div>
         )
-    },
+    };
 
-    renderRoute: function renderRoute(enderecoPartida) { 
+    renderRoute(enderecoPartida) { 
         var that = this;
         var request = { 
             origin: enderecoPartida,
@@ -46,9 +66,9 @@ var List = React.createClass({
                 that.state.directionsDisplay.setDirections(result);
             }
         });
-    },
+    };
 
-    renderMap: function renderMap() {
+    renderMap() {
         var map;
         var podrao = this.state.podrao;
         var options = {
@@ -60,17 +80,17 @@ var List = React.createClass({
         map = new google.maps.Map(document.getElementById('map'), options);
         this.state.directionsDisplay.setMap(map);
         this.getCurrentAddress();
-    },
+    };
 
-    componentDidMount: function componentDidMount() {
+    componentDidMount() {
         this.renderMap();
-    },
+    };
 
-    componentDidUpdate: function componentDidUpdate() {
+    componentDidUpdate() {
         this.renderMap();
-    },
+    };
 
-    getCurrentAddress: function getCurrentAddress() {
+    getCurrentAddress() {
         var that = this;
         var latlng = this.state.latlng;
         var geocoder = new google.maps.Geocoder();
@@ -83,18 +103,18 @@ var List = React.createClass({
                 that.renderRoute(results[0].formatted_address);
             }
         });
-    },
+    };
 
-    render: function render() {
-        var divStyle = {width: 500, height: 700};
-
+    render() {
         return (
-            <div>
-                <Header />
+            <section className="card">
+                <Header updateMode={this.props.updateMode} mode={this.props.mode} />
                 {this.renderCard()}
-                <button onClick={this.update}>Lixo, quero outro</button>
-                <div id="map" style={divStyle}></div>
-            </div>
+                <button onClick={this.update.bind(this)}>{this.state.buttonValue}</button>
+                <div id="map"></div>
+            </section>
         )
-    }
-});
+    };
+};
+
+export default List;

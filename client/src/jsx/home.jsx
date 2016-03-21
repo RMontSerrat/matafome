@@ -1,20 +1,28 @@
-var Home = React.createClass({
-    renderSearch: function renderSearch() {
+import React from 'react';
+
+class Home extends React.Component {
+    constructor(props) {
+        super(props);
+    };
+
+    renderSearch() {
         this.props.updateMode('search');
-    },
+    };
 
-    renderNew: function renderNew () {
-        this.props.updateMode('new');
-    },
-
-    render: function render() {
+    render() {
         return (
-            <div>
-                <Header />
-                <img src="../../src/img/bg.png" />
-                <button onClick={this.renderSearch}>buscar podrão</button>
-                <button onClick={this.renderNew}>Novo podrão!</button>
+            <div className="home">
+                <div className="bg"></div>
+                <div className="content">
+                    <img src="../../src/img/foto_burger-01.png" />
+                    <div className="actions">
+                        <button onClick={this.renderSearch.bind(this)}>buscar podrão</button>
+                        {/* <button onClick={this.renderNew.bind(this)}>Novo podrão!</button> */}
+                    </div>
+                </div>
             </div>
         )
     }
-});
+};
+
+export default Home;

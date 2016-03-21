@@ -5,12 +5,14 @@ body {
    font-family: $sec;
    font-size: 22px;
    background-color: $yellow;
+   color: $red;
 }
 
 #container {
-   max-width: 1045px;
+   max-width: 22rem;
    width: 100%;
-   margin: 40px auto;
+   padding: 2rem;
+   float: none;
    h1, h2, h3, h4 {
       font-family: $main;
       color: $red;
@@ -27,7 +29,7 @@ body {
    p {
       font-size: 22px;
       font-weight: bold;
-      color: #666;
+      font-family: $gothan-light;
    }
 
    li {
@@ -46,9 +48,9 @@ body {
       font-family: $main;
    }
 
-   button {
-      width: 15rem;
-      padding: 15px;
+   button, input[type="submit"] {
+      width: auto;
+      padding: 1rem 2.2rem;
       font-family: $main;
       color: $yellow;
       background-color: $red;
@@ -57,7 +59,7 @@ body {
       transition: .2s;
       font-size: 22px;
       display: block;
-      margin: 1rem auto;
+      margin: 1rem 0;
    }
 
    button:hover {
@@ -79,21 +81,24 @@ body {
       color: $red;
       height: auto;
       box-shadow: none;
+      float: left;
    }
 
    input[type="checkbox"] {
-      position: absolute;
+      display: none;
       +label {
+         margin-bottom: 1rem;
          margin-left: 0;
-         margin-right: 1em;
          font-size: 14px;
+         width: 3rem;
+         text-align: center;
          &:before {
             content: "";
             display: block;
             width: 30px;
             height: 30px;
-            border           : 2px solid $red;
-            border-radius    : 30px;
+            border : 2px solid $red;
+            border-radius : 30px;
             background-color: transparent;
             box-shadow: none;
             margin: 0 auto;
@@ -130,3 +135,15 @@ body {
    }
 }
 
+footer {
+   position: absolute;
+   background-color: $yellow;
+   text-align: left;
+   padding: 0 2rem 2rem 2rem;
+   display: none;
+   p {
+      margin: 0;
+      padding: 0;
+      color: $red;
+   }
+}

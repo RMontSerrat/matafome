@@ -1,38 +1,57 @@
-var Section = React.createClass({
-    getInitialState: function getInitialState() {
-        return {
-            mode: this.props.mode || 'home',
+import React from 'react';
+import Home from './home';
+import Search from './search';
+import List from './list';
+import New from './new';
+import Error from './error';
+import Empty from './empty';
+
+
+class Section extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            mode: props.mode,
             data: [],
             crd: []
         };
-    },
+    };
 
-    updateMode: function updateMode(mode, data, crd) {
+    updateMode(mode, data, crd) {
         this.setState({
             mode: mode,
             data: data || [],
             crd: crd || []
         });
-    },
+    };
 
-    render: function render() {
+    render() {
         switch (this.state.mode) {
             case 'search':
                 return (
-                    <Search updateMode={this.updateMode} mode={this.state.mode} />
+                    <Search updateMode={this.updateMode.bind(this)} mode={this.state.mode} />
                 );
             case 'list':
                 return (
-                    <List updateMode={this.updateMode} mode={this.state.mode} data={this.state.data} crd={this.state.crd} />
+                    <List updateMode={this.updateMode.bind(this)} mode={this.state.mode} data={this.state.data} crd={this.state.crd} />
                 );
             case 'new':
                 return (
-                    <New updateMode={this.updateMode} mode={this.state.mode} />
+                    <New updateMode={this.updateMode.bind(this)} mode={this.state.mode} />
+                )
+            case 'error':
+                return (
+                    <Error updateMode={this.updateMode.bind(this)} mode={this.state.mode} />
+                )
+            case 'empty':
+                return (
+                    <Empty updateMode={this.updateMode.bind(this)} mode={this.state.mode} />
                 )
         }
         return (
-            <Home updateMode={this.updateMode} mode={this.state.mode} />
+            <Home updateMode={this.updateMode.bind(this)} mode={this.state.mode} />
         );
     }
-});
+};
 
+export default Section;

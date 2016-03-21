@@ -1,23 +1,24 @@
-var Section = React.createClass({
-    displayName: 'Section',
+import React from 'react';
 
-    getInitialState: function getInitialState() {
-        return {
+class Section extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
             mode: this.props.mode || 'home',
             data: [],
             crd: []
         };
-    },
+    }
 
-    updateMode: function updateMode(mode, data, crd) {
+    updateMode(mode, data, crd) {
         this.setState({
             mode: mode,
             data: data || [],
             crd: crd || []
         });
-    },
+    }
 
-    render: function render() {
+    render() {
         switch (this.state.mode) {
             case 'search':
                 return React.createElement(Search, { updateMode: this.updateMode, mode: this.state.mode });
@@ -28,4 +29,6 @@ var Section = React.createClass({
         }
         return React.createElement(Home, { updateMode: this.updateMode, mode: this.state.mode });
     }
-});
+};
+
+export default Section;

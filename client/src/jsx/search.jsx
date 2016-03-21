@@ -1,18 +1,33 @@
-var Search = React.createClass({
-    componentDidMount: function componentDidMount() {
+import React from 'react';
+import Header from './header';
+
+class Search extends React.Component {
+    constructor(props) {
+        super(props);
+    };
+
+    componentDidMount() {
         var options = {
           enableHighAccuracy: true,
           timeout: 5000,
           maximumAge: 0
         };
         
-        navigator.geolocation.getCurrentPosition(this.successLocation, this.errorLocation, options);
-    },
+        navigator.geolocation.getCurrentPosition(this.successLocation.bind(this), this.errorLocation.bind(this), options);
+    };
 
-    successLocation: function successLocation(pos) {
-        var self = this,
+    renderMode(data, crd) {
+        if (data.podroes.length > 1) {
+            this.props.updateMode('list', data, crd);
+        } else {
+            this.props.updateMode('empty');
+        }
+    };
+
+    successLocation(pos) {
+        var that = this,
             crd = pos.coords,
-            url = 'http://localhost:5000/';
+            url = 'http://localhost:5000/',
             data = {
               lat: crd.latitude,
               lon: crd.longitude
@@ -24,21 +39,25 @@ var Search = React.createClass({
             type: "GET",
             crossDomain: true,
             success: function(data){
-                self.props.updateMode('list', data, crd);
+                that.renderMode(data, crd);
             }
         });
-    },
+    };
 
-    errorLocation: function errorLocation() {
-        console.log('erro');
-    },
+    errorLocation() {
+      this.props.updateMode('error');
+    };
 
-    render: function render() {
+    render() {
       return (
-         <div>
-            <img src="../../src/img/bg.png" />
-            <button>buscar podrão</button>
+         <div className="search">
+            <Header updateMode={this.props.updateMode} mode={this.props.mode} />
+            <h2 className="loading">
+               <span>procurando podrões bem, bem gordurosos...</span>
+            </h2>
          </div>
       )
-    }
-});
+    };
+};
+
+export default Search;
