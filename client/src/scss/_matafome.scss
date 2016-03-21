@@ -1,0 +1,134 @@
+#container {
+   .bg {
+      background-image: url('../../src/img/bg.png');
+      background-repeat: no-repeat;
+      background-position: top center;
+      height: 100%;
+      width: 100%;
+      position: absolute;
+      left: 0;
+      background-size: auto 85%;
+   }
+   .content {
+      padding-top: 9rem;
+      .actions {
+         margin-top: 9rem;
+      }
+   }
+
+   header {
+      margin-bottom: 2rem;
+      display: block;
+      img {
+         width: 100%;
+         height: auto;
+      }
+      .logo-header {
+         display: inline-block;
+         max-width: 8rem;
+         cursor: pointer;
+      }
+      .icon-new {
+         float: right;
+         max-width: 1.5rem;
+         cursor: pointer;
+      }
+   }
+   .card-informations {
+      max-width: 13rem;
+      p {
+         color: $red;
+         font-size: 1.0rem;
+         margin: 0;
+         text-transform: lowercase;
+      }
+   }
+   .card {
+      #map {
+         width: 100%;
+         position: absolute;
+         height: 20rem;
+         left: 0;
+      }
+      button {
+         width: auto;
+         margin: 1.5rem 0 2rem 0;
+         padding: 1rem;
+      }
+   }
+   .new {
+      form {
+         text-align: left;
+         input[type="submit"] {
+            margin-top: 2rem;
+         }
+         label[for="types"] {
+            padding-bottom: 1rem;
+         }
+      }
+   }
+
+   .search {
+      .loading {
+         font-size: 2.6rem;
+         padding-top: 10rem;
+      }
+   }
+   .ticket {
+      width: 2.5rem;
+      height: 2.5rem;
+      background-color: blue;
+      position: absolute;
+      right: 2.7rem;
+      top: 6.5rem;
+      display: table;
+      color: $red;
+      &:before, &:after {
+         content: "";
+         position: absolute;
+         top: 0;
+         left: 0;
+         height: 2.5rem;
+         width: 2.5rem;
+         background: blue;
+         z-index: -1;
+      }
+      &:before {
+         -webkit-transform: rotate(30deg);
+         -moz-transform: rotate(30deg);
+         -ms-transform: rotate(30deg);
+         -o-transform: rotate(30deg);
+      }
+      &:after {
+         -webkit-transform: rotate(60deg);
+         -moz-transform: rotate(60deg);
+         -ms-transform: rotate(60deg);
+         -o-transform: rotate(60deg);
+      }
+      p {
+         *position: absolute;
+         top: 50%;
+         display: table-cell;
+         vertical-align: middle;
+         span {
+            font-family: $gothan-bold;
+            line-height: 1rem;
+            width: 2.4rem;
+            word-wrap: break-word;
+            text-align: center;
+            display: block;
+            top: -50%;
+            *position: relative;
+            -webkit-transform: rotate(-25deg);
+            -moz-transform: rotate(-25deg);
+            -ms-transform: rotate(-25deg);
+            -o-transform: rotate(-25deg);
+         }
+      }
+   }
+   .home {
+      button {
+         margin: 0 auto;
+      }
+   }
+}
