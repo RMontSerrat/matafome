@@ -1,1 +1,1 @@
-api: cd api; python ./manage.py
+api: python ./manage.py
