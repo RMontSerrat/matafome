@@ -43,7 +43,7 @@ def index_elasticsearch(data):
    es.index(index="matafome", doc_type="podrao", body=body)
 
 def create_mapping(index):
-  	es.indices.create(index=index, body=mapping)
+  	es.indices.create(index=index, body=mapping, ignore=400)
 
 def update_likes(id):
 	query = {"fields": ["likes"], "query": {"match": {"_id": id}}}

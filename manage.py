@@ -3,9 +3,13 @@ import json
 from flask import Flask, request, render_template, jsonify
 from flask.ext.cors import CORS
 from filter_esearch import search_podroes
-from commands.esearch import index_elasticsearch, update_likes, update_complaints
+from commands.esearch import index_elasticsearch, update_likes, update_complaints, create_mapping
+from elasticsearch import Elasticsearch
+
+es = Elasticsearch()
 app = Flask(__name__)
 CORS(app)
+
 
 @app.route("/")
 def podroes():
@@ -38,5 +42,6 @@ def complaint():
 		return ""
 
 if __name__ == '__main__':
+	create_mapping(index="matafome")
 	app.run(debug=True, use_reloader=True, threaded=True)
 
