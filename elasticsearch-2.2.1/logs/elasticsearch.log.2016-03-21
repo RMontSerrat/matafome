@@ -1,0 +1,20 @@
+[2016-03-21 09:59:43,332][INFO ][node                     ] [Ms. Steed] version[2.2.1], pid[19143], build[d045fc2/2016-03-09T09:38:54Z]
+[2016-03-21 09:59:43,332][INFO ][node                     ] [Ms. Steed] initializing ...
+[2016-03-21 09:59:43,910][INFO ][plugins                  ] [Ms. Steed] modules [lang-groovy, lang-expression], plugins [], sites []
+[2016-03-21 09:59:43,932][INFO ][env                      ] [Ms. Steed] using [1] data paths, mounts [[/ (/dev/sda1)]], net usable_space [849gb], net total_space [908.9gb], spins? [possibly], types [ext4]
+[2016-03-21 09:59:43,932][INFO ][env                      ] [Ms. Steed] heap size [990.7mb], compressed ordinary object pointers [true]
+[2016-03-21 09:59:43,932][WARN ][env                      ] [Ms. Steed] max file descriptors [4096] for elasticsearch process likely too low, consider increasing to at least [65536]
+[2016-03-21 09:59:45,616][INFO ][node                     ] [Ms. Steed] initialized
+[2016-03-21 09:59:45,616][INFO ][node                     ] [Ms. Steed] starting ...
+[2016-03-21 09:59:45,695][INFO ][transport                ] [Ms. Steed] publish_address {127.0.0.1:9300}, bound_addresses {127.0.0.1:9300}, {[::1]:9300}
+[2016-03-21 09:59:45,705][INFO ][discovery                ] [Ms. Steed] elasticsearch/pU1YjLGoT1SIrMhXT9JFdg
+[2016-03-21 09:59:48,747][INFO ][cluster.service          ] [Ms. Steed] new_master {Ms. Steed}{pU1YjLGoT1SIrMhXT9JFdg}{127.0.0.1}{127.0.0.1:9300}, reason: zen-disco-join(elected_as_master, [0] joins received)
+[2016-03-21 09:59:48,797][INFO ][http                     ] [Ms. Steed] publish_address {127.0.0.1:9200}, bound_addresses {127.0.0.1:9200}, {[::1]:9200}
+[2016-03-21 09:59:48,797][INFO ][node                     ] [Ms. Steed] started
+[2016-03-21 09:59:48,894][INFO ][gateway                  ] [Ms. Steed] recovered [0] indices into cluster_state
+[2016-03-21 10:05:59,822][INFO ][cluster.metadata         ] [Ms. Steed] [matafome] creating index, cause [api], templates [], shards [1]/[0], mappings [podrao]
+[2016-03-21 10:06:00,212][INFO ][cluster.routing.allocation] [Ms. Steed] Cluster health status changed from [RED] to [GREEN] (reason: [shards started [[matafome][0]] ...]).
+[2016-03-21 10:33:34,244][INFO ][node                     ] [Ms. Steed] stopping ...
+[2016-03-21 10:33:34,271][INFO ][node                     ] [Ms. Steed] stopped
+[2016-03-21 10:33:34,271][INFO ][node                     ] [Ms. Steed] closing ...
+[2016-03-21 10:33:34,277][INFO ][node                     ] [Ms. Steed] closed
