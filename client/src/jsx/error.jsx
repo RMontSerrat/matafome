@@ -1,3 +1,4 @@
+import request from 'request';
 import React from 'react';
 import Header from './header';
 
@@ -44,24 +45,18 @@ class Error extends React.Component {
         }
     };
     
-    successLocation(crd) {
-        console.log(crd);
-
+    successLocation(pos) {
         var that = this,
+            crd = pos.coords,
             url = 'http://localhost:5000/',
             data = {
               lat: crd.latitude,
               lon: crd.longitude
             };
 
-        $.ajax({
-            url: url,
-            data: data,
-            type: "GET",
-            crossDomain: true,
-            success: function(data){
-                that.renderMode(data, crd);
-            }
+        request.get(url, data, function(req, resp) {
+            var response = JSON.parse(resp.body);
+            that.renderMode(response, crd)
         });
     };
 

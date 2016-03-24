@@ -1,3 +1,4 @@
+import request from 'request';
 import React from 'react';
 import Header from './header';
 
@@ -17,7 +18,8 @@ class Search extends React.Component {
     };
 
     renderMode(data, crd) {
-        if (data.podroes.length > 1) {
+        console.log(data);
+        if (data.total > 1) {
             this.props.updateMode('list', data, crd);
         } else {
             this.props.updateMode('empty');
@@ -33,14 +35,9 @@ class Search extends React.Component {
               lon: crd.longitude
             };
 
-        $.ajax({
-            url: url,
-            data: data,
-            type: "GET",
-            crossDomain: true,
-            success: function(data){
-                that.renderMode(data, crd);
-            }
+        request.get(url, data, function(req, resp) {
+            var response = JSON.parse(resp.body);
+            that.renderMode(response, crd)
         });
     };
 

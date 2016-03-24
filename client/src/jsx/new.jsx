@@ -1,3 +1,4 @@
+import request from 'request';
 import React from 'react';
 import Header from './header';
 
@@ -45,18 +46,15 @@ class New extends React.Component {
     };
 
     save () {
-        var data = this.state.data;
-
-        console.log(data);
-        $.ajax({
-            url: 'http://localhost:5000/add/',
+        request({
+            url: 'http://localhost:5000/add/', 
             method: 'POST',
-            data: JSON.stringify(data),
-            contentType: 'application/json',
-            dataType: 'json',
-            success: function (response) {
-                console.log(response);
+            json: this.state.data, 
+            headers: {
+                'Content-Type': 'application/json'
             }
+        }, function(req, resp) {
+            console.log(resp);
         });
     };
 
