@@ -1,6 +1,10 @@
 import React from 'react';
 
 class Header extends React.Component {
+    constructor(props) {
+        super(props);
+    };
+
     renderNew () {
         this.props.updateMode('new');
     };

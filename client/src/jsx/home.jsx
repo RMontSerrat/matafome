@@ -17,7 +17,6 @@ class Home extends React.Component {
                     <img src="../../src/img/foto_burger-01.png" />
                     <div className="actions">
                         <button onClick={this.renderSearch.bind(this)}>buscar podrão</button>
-                        {/* <button onClick={this.renderNew.bind(this)}>Novo podrão!</button> */}
                     </div>
                 </div>
             </div>

@@ -1,4 +1,4 @@
-import request from 'request';
+import rp from 'request-promise';
 import React from 'react';
 import Header from './header';
 
@@ -18,7 +18,6 @@ class Search extends React.Component {
     };
 
     renderMode(data, crd) {
-        console.log(data);
         if (data.total > 1) {
             this.props.updateMode('list', data, crd);
         } else {
@@ -35,9 +34,13 @@ class Search extends React.Component {
               lon: crd.longitude
             };
 
-        request.get(url, data, function(req, resp) {
-            var response = JSON.parse(resp.body);
-            that.renderMode(response, crd)
+        rp({
+            url: url, 
+            method: 'GET',
+            data: data
+        })
+        .then(function(data) {
+            that.renderMode(JSON.parse(data), crd)
         });
     };
 

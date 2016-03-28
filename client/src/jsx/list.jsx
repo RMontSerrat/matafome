@@ -17,6 +17,14 @@ class List extends React.Component {
         };
     };
 
+    componentDidMount() {
+        this.renderMap();
+    };
+
+    componentDidUpdate() {
+        this.renderMap();
+    };
+
     update() {
         var i = this.state.i;
 
@@ -54,20 +62,6 @@ class List extends React.Component {
         )
     };
 
-    renderRoute(enderecoPartida) { 
-        var that = this;
-        var request = { 
-            origin: enderecoPartida,
-            destination: this.state.podrao.vicinity,
-            travelMode: google.maps.TravelMode.DRIVING
-        };
-        this.state.directionsService.route(request, function(result, status) {
-            if (status == google.maps.DirectionsStatus.OK) {
-                that.state.directionsDisplay.setDirections(result);
-            }
-        });
-    };
-
     renderMap() {
         var map;
         var podrao = this.state.podrao;
@@ -82,14 +76,6 @@ class List extends React.Component {
         this.getCurrentAddress();
     };
 
-    componentDidMount() {
-        this.renderMap();
-    };
-
-    componentDidUpdate() {
-        this.renderMap();
-    };
-
     getCurrentAddress() {
         var that = this;
         var latlng = this.state.latlng;
@@ -101,6 +87,20 @@ class List extends React.Component {
         function(results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
                 that.renderRoute(results[0].formatted_address);
+            }
+        });
+    };
+
+    renderRoute(enderecoPartida) { 
+        var that = this;
+        var request = { 
+            origin: enderecoPartida,
+            destination: this.state.podrao.vicinity,
+            travelMode: google.maps.TravelMode.DRIVING
+        };
+        this.state.directionsService.route(request, function(result, status) {
+            if (status == google.maps.DirectionsStatus.OK) {
+                that.state.directionsDisplay.setDirections(result);
             }
         });
     };

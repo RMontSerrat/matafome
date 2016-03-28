@@ -1,4 +1,4 @@
-import request from 'request';
+import rp from 'request-promise';
 import React from 'react';
 import Header from './header';
 
@@ -23,38 +23,55 @@ class New extends React.Component {
         geocoder.geocode({ 'address': endereco, 'region': 'BR' }, function (results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
                 if (results[0]) {
-                    var latitude = results[0].geometry.location.lat();
-                    var longitude = results[0].geometry.location.lng();
-                    var location = {lat: latitude, lon: longitude};
-
-                    that.state.data.location = location;
+                    var location = {lat: results[0].geometry.location.lat(), lon: results[0].geometry.location.lng()};
+                    var data = that.state.data;
+                    
+                    data.location = location;
+                    that.setState({
+                        data: data
+                    });
                     that.save();
                 }
             }
         });
     };
 
+    getTypes () {
+        return [].slice.call(document.querySelectorAll('input[name="types[]"]:checked')).map(function (type) {
+            return type.value;
+        });
+    };
+
     bindSubmit () {
         var that = this;
 
-        document.querySelector('form').addEventListener('submit', function(e) {
+        document.querySelector('form').addEventListener('submit', function (e) {
             e.preventDefault();
-            
-            that.state.data = $(this).serializeObject();
+            var data = {
+                name: document.querySelector('input[name="name"]').value,
+                vicinity: document.querySelector('input[name="vicinity"]').value,
+                types: that.getTypes()
+            };
+
+            that.setState({
+                data: data
+            });
+
             that.getLocation();
         });
     };
 
     save () {
-        request({
+        rp({
             url: 'http://localhost:5000/add/', 
             method: 'POST',
-            json: this.state.data, 
+            json: this.state.data,
             headers: {
                 'Content-Type': 'application/json'
             }
-        }, function(req, resp) {
-            console.log(resp);
+        })
+        .then(function(req) {
+            console.log(req);
         });
     };
 
