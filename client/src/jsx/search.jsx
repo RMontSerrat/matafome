@@ -5,16 +5,18 @@ import Header from './header';
 class Search extends React.Component {
     constructor(props) {
         super(props);
+        this.successLocation = this.successLocation.bind(this);
+        this.errorLocation = this.errorLocation.bind(this);
     };
 
     componentDidMount() {
         var options = {
-          enableHighAccuracy: true,
-          timeout: 5000,
-          maximumAge: 0
+            enableHighAccuracy: true,
+            timeout: 5000,
+            maximumAge: 0
         };
         
-        navigator.geolocation.getCurrentPosition(this.successLocation.bind(this), this.errorLocation.bind(this), options);
+        navigator.geolocation.getCurrentPosition(this.successLocation, this.errorLocation, options);
     };
 
     renderMode(data, crd) {
@@ -28,7 +30,7 @@ class Search extends React.Component {
     successLocation(pos) {
         var that = this,
             crd = pos.coords,
-            url = 'http://localhost:5000/',
+            url = 'https://matafome-api.herokuapp.com/',
             data = {
               lat: crd.latitude,
               lon: crd.longitude
@@ -45,18 +47,18 @@ class Search extends React.Component {
     };
 
     errorLocation() {
-      this.props.updateMode('error');
+        this.props.updateMode('error');
     };
 
     render() {
-      return (
-         <div className="search">
-            <Header updateMode={this.props.updateMode} mode={this.props.mode} />
-            <h2 className="loading">
-               <span>procurando podrões bem, bem gordurosos...</span>
-            </h2>
-         </div>
-      )
+        return (
+            <div className="search">
+                <Header updateMode={this.props.updateMode} mode={this.props.mode} />
+                <h2 className="loading">
+                    <span>procurando podrões bem, bem gordurosos...</span>
+                </h2>
+            </div>
+        )
     };
 };
 

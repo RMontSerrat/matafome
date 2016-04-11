@@ -1,5 +1,23 @@
 import React from 'react';
 import Header from './header';
+import Ticket, {TicketGood} from './ticket';
+
+
+class Button extends Ticket {
+    constructor(props) {
+        super(props);
+    };
+
+    setTicketValue() {
+        return config.button[Math.floor(Math.random() * config.button.length)]
+    };
+
+    render() {
+        return (
+            <button onClick={this.props.onClick}>{this.state.ticketValue}</button>
+        )
+    };
+};
 
 class List extends React.Component {
     constructor(props) {
@@ -11,10 +29,9 @@ class List extends React.Component {
             loader: true,
             directionsService: new google.maps.DirectionsService(),
             directionsDisplay: new google.maps.DirectionsRenderer(),
-            latlng: new google.maps.LatLng(this.props.crd.latitude, this.props.crd.longitude),
-            buttonValue: this.setButtonValue(),
-            ticketValue: this.setTicketValue()
+            latlng: new google.maps.LatLng(this.props.crd.latitude, this.props.crd.longitude)
         };
+        this.update = this.update.bind(this);
     };
 
     componentDidMount() {
@@ -34,18 +51,8 @@ class List extends React.Component {
 
         this.setState({
             podrao: this.props.data.podroes[i+1]._source,
-            i: i+1,
-            buttonValue: this.setButtonValue(),
-            ticketValue: this.setTicketValue()
+            i: i+1
         });
-    };
-
-    setButtonValue() {
-        return config.button[Math.floor(Math.random() * config.button.length)]
-    };
-
-    setTicketValue() {
-        return config.good[Math.floor(Math.random() * config.good.length)]
     };
 
     renderCard() {
@@ -55,10 +62,8 @@ class List extends React.Component {
             <div className="card-informations">
                 <h1>{podrao.name}</h1>
                 <p>{podrao.vicinity}</p>
-                <div className="ticket ticket-card">
-                    <p><span>{this.state.ticketValue}</span></p>
-                </div>
-            </div>
+                <TicketGood /> 
+           </div>
         )
     };
 
@@ -110,7 +115,7 @@ class List extends React.Component {
             <section className="card">
                 <Header updateMode={this.props.updateMode} mode={this.props.mode} />
                 {this.renderCard()}
-                <button onClick={this.update.bind(this)}>{this.state.buttonValue}</button>
+                <Button onClick={this.update} />
                 <div id="map"></div>
             </section>
         )

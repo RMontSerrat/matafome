@@ -1,22 +1,27 @@
 import React from 'react';
 
-class Ticket extends React.Component {
+export default class Ticket extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             ticketValue: this.setTicketValue()
         };
-    }
-
-    setTicketValue() {
-        console.log('chamou');
-        return config.good[Math.floor(Math.random() * config.good.length)]
     };
 
-    componentDidUpdate() {
+    setTicketValue() {
+        return;
+    };
+
+    componentDidMount() {
         this.setState({
             ticketValue: this.setTicketValue()
-        })
+        });
+    };
+
+    componentWillReceiveProps() {
+        this.setState({
+            ticketValue: this.setTicketValue()
+        });
     };
 
     render() {
@@ -26,7 +31,24 @@ class Ticket extends React.Component {
             </div>
         )
     };
-}
+};
 
-export default Ticket;
+export class TicketGood extends Ticket {
+    constructor(props) {
+        super(props);
+    };
 
+    setTicketValue() {
+        return config.good[Math.floor(Math.random() * config.good.length)]
+    };
+};
+
+export class TicketBad extends Ticket {
+    constructor(props) {
+        super(props);
+    };
+
+    setTicketValue() {
+        return config.bad[Math.floor(Math.random() * config.bad.length)]
+    };
+};

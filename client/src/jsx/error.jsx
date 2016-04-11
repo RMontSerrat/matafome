@@ -1,6 +1,7 @@
 import rp from 'request-promise';
 import React from 'react';
 import Header from './header';
+import {TicketBad} from './ticket';
 
 class Error extends React.Component {
     constructor(props) {
@@ -46,7 +47,7 @@ class Error extends React.Component {
     successLocation(pos) {
         var that = this,
             crd = pos.coords,
-            url = 'http://localhost:5000/',
+            url = 'https://matafome-api.herokuapp.com/',
             data = {
               lat: crd.latitude,
               lon: crd.longitude
@@ -66,6 +67,7 @@ class Error extends React.Component {
         return (
          <div className="search">
             <Header updateMode={this.props.updateMode} mode={this.props.mode} />
+            <TicketBad />
             <h2 className="loading">
                <span>deu ruim, não te achamos. onde vc tá?</span>
             </h2>
