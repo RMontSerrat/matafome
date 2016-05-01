@@ -1,26 +1,19 @@
 import React from 'react';
 import Header from './header';
+import Generic from './model';
+import {TicketBad} from './ticket';
 
-class Empty extends React.Component {
-    constructor(props) {
-        super(props);
-    };
-
-    errorLocation() {
-      this.props.updateMode('error');
-    };
-
-    newPodrao() {
-      this.props.updateMode('new');
-    };
-
+class Empty extends Generic {
     render() {
       return (
-         <div className="search">
-            <Header updateMode={this.props.updateMode} mode={this.props.mode} />
-            <h2 className="loading">
+         <div className="feedback">
+            <Header />
+            <TicketBad />
+            <h2>
                 <span>não achamos nenhum perto de você :(</span>
-                <button onClick={this.newPodrao.bind(this)}>adicionar podrão</button>
+                <Link to="/new">
+                  <button>adicionar podrão</button>
+                </Link>
             </h2>
          </div>
       )

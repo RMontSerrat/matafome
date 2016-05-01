@@ -6,6 +6,62 @@ body {
    font-size: 22px;
    background-color: $yellow;
    color: $red;
+   .icon-logo, .icon-new, p, li, h1, h2, h3, h4, span {
+      color: $red;
+   }
+   button {
+      color: $yellow;
+      background-color: $red;
+   }
+   select, input[type="text"], input[type="submit"] {
+      color: $red;
+      border-color: $red;
+   }
+   ::-webkit-input-placeholder {
+      color: $red;
+   }
+
+   :-moz-placeholder {
+      color: $red;
+   }
+
+   ::-moz-placeholder {
+      color: $red;
+   }
+
+   :-ms-input-placeholder {  
+      color: $red;
+   }
+   &.invert {
+      color: $yellow;
+      background-color: $red;
+      p, li, h1, h2, h3, span, .icon-logo, .icon-new {
+         color: $yellow;
+      }
+      button {
+         background-color: $yellow;
+         color: $red;
+      }
+      select, input {
+         color: $yellow;
+         border-color: $yellow;
+      }
+      ::-webkit-input-placeholder {
+         color: $yellow;
+      }
+
+      :-moz-placeholder {
+         color: $yellow;
+      }
+
+      ::-moz-placeholder {
+         color: $yellow;
+      }
+
+      :-ms-input-placeholder {  
+         color: $yellow;
+      }
+   }
 }
 
 #container {
@@ -15,10 +71,10 @@ body {
    float: none;
    h1, h2, h3, h4 {
       font-family: $main;
-      color: $red;
       text-align: left;
    }
    h3 {
+      clear: both;
       font-size: 35px;
    }
 
@@ -52,9 +108,6 @@ body {
       width: auto;
       padding: 1rem 2.2rem;
       font-family: $main;
-      color: $yellow;
-      background-color: $red;
-      opacity: .8;
       cursor: pointer;
       transition: .2s;
       font-size: 22px;
@@ -62,23 +115,17 @@ body {
       margin: 1rem 0;
    }
 
-   button:hover {
-      opacity: 1;
-   }
-
-
    select, input {
       background-color: transparent;
       font-family: $sec;
       font-size: 22px;
       border-top-width: 0px;
       border-left-width: 0px;
-      border-right: 1px solid $red;
-      border-bottom: 1px solid $red;
+      border-right: 1px solid;
+      border-bottom: 1px solid;
       padding: 15px 15px 15px 0;
       overflow: hidden;
       outline: none;
-      color: $red;
       height: auto;
       box-shadow: none;
       float: left;
@@ -115,23 +162,6 @@ body {
 
    #outros {
       margin-right: 0;
-   }
-
-
-   ::-webkit-input-placeholder {
-      color: $red;
-   }
-
-   :-moz-placeholder {
-      color: $red;
-   }
-
-   ::-moz-placeholder {
-      color: $red;
-   }
-
-   :-ms-input-placeholder {  
-      color: $red;
    }
 }
 

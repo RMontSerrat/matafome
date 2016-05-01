@@ -7,7 +7,7 @@ from elasticsearch import Elasticsearch
 logging.basicConfig(level=logging.INFO)
 
 # Parse the auth and host from env:
-bonsai = os.environ['https://fwj5op1w:hf0hvbrp1is5pzvl@smoke-7769838.us-east-1.bonsai.io']
+bonsai = 'https://fwj5op1w:hf0hvbrp1is5pzvl@smoke-7769838.us-east-1.bonsai.io'
 auth = re.search('https\:\/\/(.*)\@', bonsai).group(1).split(':')
 host = bonsai.replace('https://%s:%s@' % (auth[0], auth[1]), '')
 
@@ -58,7 +58,7 @@ def filter_sort(lat, lon):
 	query["sort"][0]["_geo_distance"]["location"].append(location)
 
 def filter_distance(lat, lon):
-	filter = {"geo_distance": {"distance": "10km", "location": {"lat":  float(lat), "lon": float(lon)}}}
+	filter = {"geo_distance": {"distance": "3km", "location": {"lat":  float(lat), "lon": float(lon)}}}
 
 	query["query"]["filtered"]["filter"] = filter
 

@@ -4,12 +4,13 @@ export default class Ticket extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            ticketValue: this.setTicketValue()
+            ticketValue: '',
+            array: this.getArray()
         };
     };
 
     setTicketValue() {
-        return;
+        return this.state.array[Math.floor(Math.random() * this.state.array.length)]
     };
 
     componentDidMount() {
@@ -24,9 +25,14 @@ export default class Ticket extends React.Component {
         });
     };
 
+    getArray() {
+        return [];
+    };
+
     render() {
         return (
             <div className="ticket ticket-card">
+                <i className="icon-decagono"></i>
                 <p><span>{this.state.ticketValue}</span></p>
             </div>
         )
@@ -38,8 +44,8 @@ export class TicketGood extends Ticket {
         super(props);
     };
 
-    setTicketValue() {
-        return config.good[Math.floor(Math.random() * config.good.length)]
+    getArray() {
+        return config.good;
     };
 };
 
@@ -48,7 +54,8 @@ export class TicketBad extends Ticket {
         super(props);
     };
 
-    setTicketValue() {
-        return config.bad[Math.floor(Math.random() * config.bad.length)]
+    getArray() {
+        return config.bad;
     };
+
 };

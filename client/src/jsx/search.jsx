@@ -1,59 +1,41 @@
-import rp from 'request-promise';
+import request from 'request';
 import React from 'react';
 import Header from './header';
+import Generic from './model';
 
-class Search extends React.Component {
+class Search extends Generic {
     constructor(props) {
         super(props);
-        this.successLocation = this.successLocation.bind(this);
-        this.errorLocation = this.errorLocation.bind(this);
     };
 
     componentDidMount() {
-        var options = {
-            enableHighAccuracy: true,
-            timeout: 5000,
-            maximumAge: 0
-        };
-        
-        navigator.geolocation.getCurrentPosition(this.successLocation, this.errorLocation, options);
+        this.setCoordinates();
+        this.successLocation();
+        this.setColor();
     };
 
-    renderMode(data, crd) {
-        if (data.total > 1) {
-            this.props.updateMode('list', data, crd);
-        } else {
-            this.props.updateMode('empty');
-        }
-    };
-
-    successLocation(pos) {
+    successLocation() {
         var that = this,
-            crd = pos.coords,
-            url = 'https://matafome-api.herokuapp.com/',
-            data = {
-              lat: crd.latitude,
-              lon: crd.longitude
-            };
+            crd = this.state.crd,
+            url = 'https://matafome-api.herokuapp.com/';
 
-        rp({
-            url: url, 
-            method: 'GET',
-            data: data
-        })
-        .then(function(data) {
-            that.renderMode(JSON.parse(data), crd)
+        request({
+            url: url,
+            data: crd,
+            method: 'GET'
+        }, function(err, response, data) {
+            that.setState({
+                data: JSON.parse(data)
+            });
+            localStorage.setItem('data', JSON.stringify(that.state.data));
+            that.getCurrentAddress(that.renderMode);
         });
-    };
-
-    errorLocation() {
-        this.props.updateMode('error');
     };
 
     render() {
         return (
             <div className="search">
-                <Header updateMode={this.props.updateMode} mode={this.props.mode} />
+                <Header />
                 <h2 className="loading">
                     <span>procurando podrões bem, bem gordurosos...</span>
                 </h2>

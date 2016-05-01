@@ -1,27 +1,13 @@
 import React from 'react';
+import Generic from './model';
+import { Link } from 'react-router';
 
-class Header extends React.Component {
-    constructor(props) {
-        super(props);
-    };
-
-    renderNew () {
-        this.props.updateMode('new');
-    };
-
-    renderHome () {
-        this.props.updateMode('home');
-    };
-
+class Header extends Generic {
     render() {
         return (
             <header>
-                <div className="logo-header" onClick={this.renderHome.bind(this)}>
-                    <img src="../../src/img/mf_logo.png" />
-                </div>
-                <div className="icon-new" onClick={this.renderNew.bind(this)}>
-                    <img src="../../src/img/mf_menu.png" />
-                </div>
+                <Link to="/list"><i className="icon icon-logo"></i></Link>
+                <Link to="/new"><i className="icon icon-new"></i></Link>
             </header>
         );
     }

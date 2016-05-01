@@ -42,9 +42,6 @@ mapping = {
            "name": {
               "type": "string"
            },
-           "opening_hours": {
-              "type": "string"
-           },
            "types": {
               "type": "string"
            },

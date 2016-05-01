@@ -23,24 +23,37 @@
          width: 100%;
          height: auto;
       }
-      .logo-header {
-         display: inline-block;
-         max-width: 8rem;
+      .icon-logo {
+         float: left;
          cursor: pointer;
+         font-size: 8rem;
+         position: absolute;
       }
       .icon-new {
          float: right;
-         max-width: 1.5rem;
          cursor: pointer;
+         font-size: 3rem;
       }
    }
    .card-informations {
-      max-width: 13rem;
+      padding-top: 2rem;
+      h1 {
+         font-size: 2.5rem;
+         line-height: 3rem;
+         width: 14rem;
+      }
       p {
-         color: $red;
          font-size: 1.0rem;
          margin: 0;
          text-transform: lowercase;
+      }
+      .card-types {
+         margin-left: 0;
+         li {
+            font-family: $gothan-bold;
+            display: inline-block;
+            font-size: .8rem;
+         }
       }
    }
    .card {
@@ -57,6 +70,13 @@
       }
    }
    .new {
+      padding-top: 2rem;
+      #map2 {
+         width: 100%;
+         position: absolute;
+         height: 20rem;
+         left: 0;
+      }
       form {
          text-align: left;
          input[type="submit"] {
@@ -68,42 +88,30 @@
       }
    }
 
-   .search {
-      .loading {
-         font-size: 2.6rem;
+   .search, .feedback {
+      h2 {
+         font-size: 2.5rem;
          padding-top: 10rem;
       }
+      .ticket-card {
+         top: 12.5rem;
+      }
    }
-   .ticket {
+   .ticket-card {
       width: 2.5rem;
       height: 2.5rem;
-      background-color: blue;
       position: absolute;
-      right: 2.7rem;
+      right: 2.5rem;
       top: 6.5rem;
       display: table;
       color: $red;
-      &:before, &:after {
-         content: "";
+      .icon-decagono {
          position: absolute;
-         top: 0;
-         left: 0;
-         height: 2.5rem;
-         width: 2.5rem;
-         background: blue;
-         z-index: -1;
-      }
-      &:before {
-         -webkit-transform: rotate(30deg);
-         -moz-transform: rotate(30deg);
-         -ms-transform: rotate(30deg);
-         -o-transform: rotate(30deg);
-      }
-      &:after {
-         -webkit-transform: rotate(60deg);
-         -moz-transform: rotate(60deg);
-         -ms-transform: rotate(60deg);
-         -o-transform: rotate(60deg);
+         font-size: 3rem;
+         color: blue;
+         position: absolute;
+         top: 1.2rem;
+         left: -0.3rem;
       }
       p {
          *position: absolute;
@@ -112,8 +120,9 @@
          vertical-align: middle;
          span {
             font-family: $gothan-bold;
-            line-height: 1rem;
-            width: 2.4rem;
+            font-size: .8rem;
+            line-height: .8rem;
+            width: 1.9rem;
             word-wrap: break-word;
             text-align: center;
             display: block;

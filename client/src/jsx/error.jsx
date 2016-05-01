@@ -1,16 +1,14 @@
 import rp from 'request-promise';
 import React from 'react';
+import Generic from './model';
 import Header from './header';
 import {TicketBad} from './ticket';
 
-class Error extends React.Component {
-    constructor(props) {
-        super(props);
-    };
-
+class Error extends Generic {
     componentDidMount() {
         initMap();
         this.bindSubmit();
+        this.setColor();
     };
 
     bindSubmit() {
@@ -20,55 +18,34 @@ class Error extends React.Component {
             e.preventDefault();
 
             var endereco = document.querySelector('input[name="vicinity"').value;
-            var geocoder = new google.maps.Geocoder();
-            
-            geocoder.geocode({ 'address': endereco, 'region': 'BR' }, function (results, status) {
-                if (status == google.maps.GeocoderStatus.OK) {
-                    if (results[0]) {
-                        var crd = {
-                            latitude: results[0].geometry.location.lat(),
-                            longitude: results[0].geometry.location.lng()
-                        };
-                        that.successLocation(crd);
-                    }
-                }
-            });
+            that.getLocationByAddress(endereco, that.successLocation.bind(this)); 
         });
     };
 
-    renderMode(data, crd) {
-        if (data.podroes.length > 1) {
-            this.props.updateMode('list', data, crd);
-        } else {
-            this.props.updateMode('empty');
-        }
-    };
-    
-    successLocation(pos) {
+    successLocation() {
         var that = this,
-            crd = pos.coords,
-            url = 'https://matafome-api.herokuapp.com/',
-            data = {
-              lat: crd.latitude,
-              lon: crd.longitude
-            };
+            crd = this.state.crd,
+            url = 'https://matafome-api.herokuapp.com/';
 
-        rp({
-            url: url, 
-            method: 'GET',
-            data: data
-        })
-        .then(function(data) {
-            that.renderMode(JSON.parse(data), crd)
+        request({
+            url: url,
+            data: crd,
+            method: 'GET'
+        }, function(err, response, data) {
+            that.setState({
+                data: JSON.parse(data)
+            });
+            localStorage.setItem('data', JSON.stringify(that.state.data));
+            that.getCurrentAddress(that.renderMode);
         });
     };
 
     render() {
         return (
-         <div className="search">
-            <Header updateMode={this.props.updateMode} mode={this.props.mode} />
+         <div className="feedback">
+            <Header />
             <TicketBad />
-            <h2 className="loading">
+            <h2>
                <span>deu ruim, não te achamos. onde vc tá?</span>
             </h2>
             <form>

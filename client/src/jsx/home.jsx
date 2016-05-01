@@ -1,14 +1,8 @@
 import React from 'react';
+import { Link } from 'react-router';
+import Generic from './model';
 
-class Home extends React.Component {
-    constructor(props) {
-        super(props);
-    };
-
-    renderSearch() {
-        this.props.updateMode('search');
-    };
-
+class Home extends Generic {
     render() {
         return (
             <div className="home">
@@ -16,7 +10,7 @@ class Home extends React.Component {
                 <div className="content">
                     <img src="../../src/img/foto_burger-01.png" />
                     <div className="actions">
-                        <button onClick={this.renderSearch.bind(this)}>buscar podrão</button>
+                        <Link to="/search"><button>buscar podrão</button></Link>
                     </div>
                 </div>
             </div>

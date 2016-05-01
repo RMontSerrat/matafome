@@ -1,6 +1,7 @@
 import React from 'react';
 import Header from './header';
 import Ticket, {TicketGood} from './ticket';
+import Generic from './model';
 
 
 class Button extends Ticket {
@@ -8,8 +9,8 @@ class Button extends Ticket {
         super(props);
     };
 
-    setTicketValue() {
-        return config.button[Math.floor(Math.random() * config.button.length)]
+    getArray() {
+        return config.button;
     };
 
     render() {
@@ -19,23 +20,17 @@ class Button extends Ticket {
     };
 };
 
-class List extends React.Component {
+class List extends Generic {
     constructor(props) {
         super(props);
-        
-        this.state = {
-            podrao: this.props.data.podroes[0]._source,
-            i: 0,
-            loader: true,
-            directionsService: new google.maps.DirectionsService(),
-            directionsDisplay: new google.maps.DirectionsRenderer(),
-            latlng: new google.maps.LatLng(this.props.crd.latitude, this.props.crd.longitude)
-        };
+    
+        this.state.podrao = this.state.data.podroes[0]._source;
         this.update = this.update.bind(this);
     };
 
     componentDidMount() {
         this.renderMap();
+        this.setColor();
     };
 
     componentDidUpdate() {
@@ -45,13 +40,25 @@ class List extends React.Component {
     update() {
         var i = this.state.i;
 
-        if(i >= this.props.data.podroes.length-1) {
+        if(i >= this.state.data.podroes.length-1) {
             i = -1;
         }
 
         this.setState({
-            podrao: this.props.data.podroes[i+1]._source,
+            podrao: this.state.data.podroes[i+1]._source,
             i: i+1
+        });
+    };
+
+    rendeTypes() {
+        var types = this.state.podrao.types;
+        return types.map(function (type, key) {
+            var space = '';
+            if(key < types.length - 1) {
+                space = '•';
+            };
+
+            return <li key={key}>{type + ' ' + space}</li>
         });
     };
 
@@ -61,6 +68,7 @@ class List extends React.Component {
         return (
             <div className="card-informations">
                 <h1>{podrao.name}</h1>
+                { /*<ul className="card-types">{this.rendeTypes()}</ul> */}
                 <p>{podrao.vicinity}</p>
                 <TicketGood /> 
            </div>
@@ -70,42 +78,29 @@ class List extends React.Component {
     renderMap() {
         var map;
         var podrao = this.state.podrao;
+        var directionsDisplay = new google.maps.DirectionsRenderer();
         var options = {
             zoom: 17,
-            center: this.state.latlng,
+            center: new google.maps.LatLng(this.state.crd.lat, this.state.crd.lon),
             mapTypeId: google.maps.MapTypeId.ROADMAP
         };
          
         map = new google.maps.Map(document.getElementById('map'), options);
-        this.state.directionsDisplay.setMap(map);
-        this.getCurrentAddress();
+        directionsDisplay.setMap(map);
+        this.renderRoute(directionsDisplay);
     };
 
-    getCurrentAddress() {
+    renderRoute(directionsDisplay) {
         var that = this;
-        var latlng = this.state.latlng;
-        var geocoder = new google.maps.Geocoder();
-
-        geocoder.geocode({
-            "location": latlng
-        },
-        function(results, status) {
-            if (status == google.maps.GeocoderStatus.OK) {
-                that.renderRoute(results[0].formatted_address);
-            }
-        });
-    };
-
-    renderRoute(enderecoPartida) { 
-        var that = this;
+        var directionsService = new google.maps.DirectionsService();
         var request = { 
-            origin: enderecoPartida,
+            origin: this.state.address,
             destination: this.state.podrao.vicinity,
             travelMode: google.maps.TravelMode.DRIVING
         };
-        this.state.directionsService.route(request, function(result, status) {
+        directionsService.route(request, function(result, status) {
             if (status == google.maps.DirectionsStatus.OK) {
-                that.state.directionsDisplay.setDirections(result);
+                directionsDisplay.setDirections(result);
             }
         });
     };
@@ -113,7 +108,7 @@ class List extends React.Component {
     render() {
         return (
             <section className="card">
-                <Header updateMode={this.props.updateMode} mode={this.props.mode} />
+                <Header />
                 {this.renderCard()}
                 <Button onClick={this.update} />
                 <div id="map"></div>
