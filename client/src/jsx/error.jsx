@@ -1,14 +1,19 @@
-import rp from 'request-promise';
+import request from 'request';
 import React from 'react';
 import Generic from './model';
 import Header from './header';
 import {TicketBad} from './ticket';
+import { browserHistory } from 'react-router';
 
 class Error extends Generic {
+    constructor(props) {
+        super(props);
+    };
+
     componentDidMount() {
         initMap();
         this.bindSubmit();
-        this.setColor();
+        this.invertColor();
     };
 
     bindSubmit() {
@@ -17,27 +22,48 @@ class Error extends Generic {
         document.querySelector('form').addEventListener('submit', function(e) {
             e.preventDefault();
 
-            var endereco = document.querySelector('input[name="vicinity"').value;
-            that.getLocationByAddress(endereco, that.successLocation.bind(this)); 
+            var address = document.querySelector('input[name="vicinity"').value;
+
+            localStorage.setItem('address', JSON.stringify(address));
+            that.getAddress(address); 
         });
     };
 
-    successLocation() {
-        var that = this,
-            crd = this.state.crd,
-            url = 'https://matafome-api.herokuapp.com/';
+    getAddress(address) {
+        var that = this;
+        var geocoder = new google.maps.Geocoder();
 
-        request({
-            url: url,
-            data: crd,
-            method: 'GET'
-        }, function(err, response, data) {
-            that.setState({
-                data: JSON.parse(data)
-            });
-            localStorage.setItem('data', JSON.stringify(that.state.data));
-            that.getCurrentAddress(that.renderMode);
+        geocoder.geocode({ 'address': address, 'region': 'BR' }, function (results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                if (results[0]) {
+                    var crd = {
+                        latitude: results[0].geometry.location.lat(),
+                        longitude: results[0].geometry.location.lng()
+                    };
+
+                    localStorage.setItem('crd', JSON.stringify(crd));
+                    that.fetchData(crd);
+                }
+            }
         });
+    };
+
+    fetchData(crd) {
+        var that = this;
+        var url = 'https://matafome-api.herokuapp.com/?lat=' + crd.latitude + '&lon=' + crd.longitude;
+        
+        request.get(url, function(err, response, data) {
+            localStorage.setItem('data', data);
+            that.renderMode(JSON.parse(data));
+        });
+    };
+
+    renderMode(data) {
+        if (data.total >= 1) {
+            browserHistory.push('/list');
+        } else {
+            browserHistory.push('/empty');
+        }
     };
 
     render() {
@@ -50,7 +76,7 @@ class Error extends Generic {
             </h2>
             <form>
                 <input type="text" name="vicinity" placeholder="escreva aqui" />
-                <input type="submit" style={{visibility: 'hidden'}} />
+                <input type="submit" value="pronto!" />
             </form>
          </div>
         )

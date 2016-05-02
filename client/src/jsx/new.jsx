@@ -1,29 +1,41 @@
 import request from 'request';
 import React from 'react';
-import { browserHistory } from 'react-router'
+import { browserHistory, Link } from 'react-router'
 import Header from './header';
 import Generic from './model';
 import {TicketBad, TicketGood} from './ticket';
 class New extends Generic {
 	constructor(props) {
 		super(props);
-		// this.state = {
-		// 	crd: localStorage.crd ? JSON.parse(localStorage.crd) : {},
-		// 	geocoder: new google.maps.Geocoder(),
-		// 	map: {},
-		// 	marker: {}
-		// };
 	};
 	
 	componentDidMount() {
 		initMap();
 		this.bindSubmit();
-		this.setColor();
+		this.renderMap();
+        this.resetColor();
 	};
 
 	getTypes() {
 		return [].slice.call(document.querySelectorAll('input[name="types[]"]:checked')).map(function (type) {
 			return type.value;
+		});
+	};
+
+	getAddress(endereco) {
+		var that = this;
+		var geocoder = new google.maps.Geocoder();
+
+		geocoder.geocode({ 'address': endereco, 'region': 'BR' }, function (results, status) {
+			if (status == google.maps.GeocoderStatus.OK) {
+				if (results[0]) {
+					var crd = {
+						latitude: results[0].geometry.location.lat(),
+						longitude: results[0].geometry.location.lng()
+					};
+					that.save(crd);
+				}
+			}
 		});
 	};
 
@@ -33,48 +45,74 @@ class New extends Generic {
 		document.querySelector('form').addEventListener('submit', function (e) {
 			e.preventDefault();
 			var endereco = document.querySelector('input[name="vicinity"]').value;
-			that.getLocationByAddress(endereco, that.save.bind(that));
+			that.getAddress(endereco);
 		});
 	};
 
-	// renderMap() {
-	// 	var latlng = new google.maps.LatLng(this.state.crd.lat, this.state.crd.lon);
-	// 	var directionsDisplay = new google.maps.DirectionsRenderer();
-	// 	var options = {
-	// 		zoom: 17,
-	// 		center: latlng,
-	// 		mapTypeId: google.maps.MapTypeId.ROADMAP
-	// 	};
+	renderMap() {
+		var latlng = new google.maps.LatLng(this.state.crd.latitude, this.state.crd.longitude);
+		var directionsDisplay = new google.maps.DirectionsRenderer();
+		var options = {
+			zoom: 17,
+			center: latlng,
+			mapTypeId: google.maps.MapTypeId.ROADMAP
+		};
 
-	// 	var map = new google.maps.Map(document.getElementById('map2'), options);
+		var map = new google.maps.Map(document.getElementById('map2'), options);
 
-	// 	this.setState({
-	// 		map: map
-	// 	})
+		this.markMap(latlng, map);
+	};
 
-	// 	this.markMap(latlng, map);
-	// };
+	markMap(latlng, map) {
+		var marker = new google.maps.Marker({
+				map: map,
+				draggable: true
+			});
 
-	// markMap(latlng, map) {
-	// 	var marker = new google.maps.Marker({
-	// 			map: map,
-	// 			draggable: true
-	// 		});
+		marker.setPosition(latlng);
+		this.bindDragMap(marker);
+		this.bindAutoComplete(map, marker);
+	};
 
-	// 	marker.setPosition(latlng);
+	bindDragMap(marker) {
+		var geocoder = new google.maps.Geocoder();
+			
+		google.maps.event.addListener(marker, 'drag', function () {
+			geocoder.geocode({ 'latLng': marker.getPosition() }, function (results, status) {
+				if (status == google.maps.GeocoderStatus.OK) {
+					if (results[0]) {
+						document.querySelector('input[name="vicinity"]').value = results[0].formatted_address;
+					}
+				}
+			});
+		});
+	};
+
+	bindAutoComplete(map, marker) {
+		var input = document.querySelector("input[name='vicinity']");
+		var autocomplete = new google.maps.places.Autocomplete(input);
 		
-	// 	this.setState({
-	// 		marker: marker
-	// 	});
-	// };
+		autocomplete.addListener('place_changed', function() {
+		   var place = autocomplete.getPlace();
+		   if (!place.geometry) {
+			  return;
+		   }
+			var location = new google.maps.LatLng(place.geometry.location.lat(), place.geometry.location.lng());
+			marker.setPosition(location);
+			map.setCenter(location);
+			map.setZoom(17);
+		});
+	};
 
-	save() {
+	save(crd) {
 		var that = this;
 		var data = {
 			name: document.querySelector('input[name="name"]').value,
 			vicinity: document.querySelector('input[name="vicinity"]').value,
-			// types: that.getTypes(),
-			location: [this.state.crd.latitude, this.state.crd.longitude]
+			location: {
+				lat: crd.latitude, 
+				lon: crd.longitude
+			}
 		};
 		request({
 			url: 'https://matafome-api.herokuapp.com/add/',
@@ -96,7 +134,8 @@ class New extends Generic {
 				<h3>novo podrão</h3>
 				<form>
 					<input type="text" name="name" placeholder="nome do podrão" required="required" />
-					<input type="text" name="vicinity" placeholder="onde fica?" required="required" value={this.state.address || ''} />
+					<input type="text" name="vicinity" placeholder="onde fica?" required="required" defaultValue={this.state.address} />
+					<div id="map2"></div>
 					{/* <label for="opening_hours">horário de funcionamento</label> 
 					<input type="text" name="opening_hours[]" placeholder="de" />
 					<input type="text" name="opening_hours[]" placeholder="ate" />
@@ -125,6 +164,10 @@ class New extends Generic {
 };
 
 export class ErrorNew extends Generic {
+	componentDidMount() {
+		this.invertColor();
+	};
+
 	render() {
 		return (
 		 <div className="search">
@@ -142,6 +185,10 @@ export class ErrorNew extends Generic {
 };
 
 export class SuccessNew extends Generic {
+	componentDidMount() {
+		this.invertColor();
+	};
+
 	render() {
 		return (
 		 <div className="search">
@@ -150,7 +197,7 @@ export class SuccessNew extends Generic {
 			<h2 className="loading">
 			   <span>oba! podrão novo na área. obrigado!</span>
 			</h2>
-			<Link to="/list">
+			<Link to="/search">
 				<button>explorar podrões</button>
 			</Link>
 		 </div>

@@ -4,7 +4,7 @@ import Ticket, {TicketGood} from './ticket';
 import Generic from './model';
 
 
-class Button extends Ticket {
+class Botao extends Ticket {
     constructor(props) {
         super(props);
     };
@@ -23,14 +23,15 @@ class Button extends Ticket {
 class List extends Generic {
     constructor(props) {
         super(props);
-    
-        this.state.podrao = this.state.data.podroes[0]._source;
-        this.update = this.update.bind(this);
+        _.extend(this.state, {
+            podrao: this.state.data.podroes[0]._source, 
+            i: 0
+        });
     };
 
     componentDidMount() {
+        this.invertColor();
         this.renderMap();
-        this.setColor();
     };
 
     componentDidUpdate() {
@@ -75,26 +76,43 @@ class List extends Generic {
         )
     };
 
+    getCurrentAddress(directionsDisplay) {
+        var that = this;
+        var latlng = new google.maps.LatLng(this.state.crd.latitude, this.state.crd.longitude);
+        var geocoder = new google.maps.Geocoder();
+
+        geocoder.geocode({
+            "location": latlng
+        },
+        function(results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                var address = results[0].formatted_address;
+                localStorage.setItem('address', JSON.stringify(address));
+                that.renderRoute(directionsDisplay, address);
+            }
+        });
+    };
+
     renderMap() {
+        console.log(this.state);
         var map;
-        var podrao = this.state.podrao;
         var directionsDisplay = new google.maps.DirectionsRenderer();
         var options = {
             zoom: 17,
-            center: new google.maps.LatLng(this.state.crd.lat, this.state.crd.lon),
+            center: new google.maps.LatLng(this.state.crd.latitude, this.state.crd.longitude),
             mapTypeId: google.maps.MapTypeId.ROADMAP
         };
          
         map = new google.maps.Map(document.getElementById('map'), options);
         directionsDisplay.setMap(map);
-        this.renderRoute(directionsDisplay);
+        this.getCurrentAddress(directionsDisplay);
     };
 
-    renderRoute(directionsDisplay) {
+    renderRoute(directionsDisplay, address) {
         var that = this;
         var directionsService = new google.maps.DirectionsService();
         var request = { 
-            origin: this.state.address,
+            origin: address,
             destination: this.state.podrao.vicinity,
             travelMode: google.maps.TravelMode.DRIVING
         };
@@ -110,7 +128,7 @@ class List extends Generic {
             <section className="card">
                 <Header />
                 {this.renderCard()}
-                <Button onClick={this.update} />
+                <Botao onClick={this.update.bind(this)} />
                 <div id="map"></div>
             </section>
         )

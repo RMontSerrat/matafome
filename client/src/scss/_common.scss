@@ -6,60 +6,80 @@ body {
    font-size: 22px;
    background-color: $yellow;
    color: $red;
-   .icon-logo, .icon-new, p, li, h1, h2, h3, h4, span {
-      color: $red;
-   }
-   button {
-      color: $yellow;
-      background-color: $red;
-   }
-   select, input[type="text"], input[type="submit"] {
-      color: $red;
-      border-color: $red;
-   }
-   ::-webkit-input-placeholder {
-      color: $red;
-   }
+   transition-duration: .5s;
+   transition-timing-function: ease-out;
+   #container {
+      .icon-logo, .icon-new, p, li, h1, h2, h3, h4, span {
+         color: $red;
+         transition-duration: .5s;
+         transition-timing-function: ease-out;
+      }
+      button, button:hover, button:focus, input[type="submit"] {
+         color: $yellow;
+         background-color: $red;
+         transition-duration: .5s;
+         transition-timing-function: ease-out;
+      }
+      select, input[type="text"] {
+         color: $red;
+         border-color: $red;
+         transition-duration: .5s;
+         transition-timing-function: ease-out;
+      }
+      ::-webkit-input-placeholder {
+         color: $red;
+         transition-duration: .5s;
+         transition-timing-function: ease-out;
+      }
 
-   :-moz-placeholder {
-      color: $red;
-   }
+      :-moz-placeholder {
+         color: $red;
+         transition-duration: .5s;
+         transition-timing-function: ease-out;
+      }
 
-   ::-moz-placeholder {
-      color: $red;
-   }
+      ::-moz-placeholder {
+         color: $red;
+         transition-duration: .5s;
+         transition-timing-function: ease-out;
+      }
 
-   :-ms-input-placeholder {  
-      color: $red;
+      :-ms-input-placeholder {  
+         color: $red;
+         transition-duration: .5s;
+         transition-timing-function: ease-out;
+      }
    }
    &.invert {
       color: $yellow;
       background-color: $red;
-      p, li, h1, h2, h3, span, .icon-logo, .icon-new {
-         color: $yellow;
-      }
-      button {
-         background-color: $yellow;
-         color: $red;
-      }
-      select, input {
-         color: $yellow;
-         border-color: $yellow;
-      }
-      ::-webkit-input-placeholder {
-         color: $yellow;
-      }
+      #container {
+         p, li, h1, h2, h3, span, .icon-logo, .icon-new {
+            color: $yellow;
+         }
+         button, button:hover, button:focus, input[type="submit"] {
+            background-color: $yellow;
+            color: $red;
+         }
+         select, input {
+            color: $yellow;
+            border-color: $yellow;
+         }
+         ::-webkit-input-placeholder {
+            color: $yellow;
+         }
 
-      :-moz-placeholder {
-         color: $yellow;
-      }
+         :-moz-placeholder {
+            color: $yellow;
+         }
 
-      ::-moz-placeholder {
-         color: $yellow;
-      }
+         ::-moz-placeholder {
+            color: $yellow;
+         }
 
-      :-ms-input-placeholder {  
-         color: $yellow;
+         :-ms-input-placeholder {  
+            color: $yellow;
+         }
       }
    }
 }
@@ -115,7 +135,7 @@ body {
       margin: 1rem 0;
    }
 
-   select, input {
+   select, input[type="text"] {
       background-color: transparent;
       font-family: $sec;
       font-size: 22px;
@@ -128,7 +148,6 @@ body {
       outline: none;
       height: auto;
       box-shadow: none;
-      float: left;
    }
 
    input[type="checkbox"] {

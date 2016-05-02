@@ -6,7 +6,7 @@ class Header extends Generic {
     render() {
         return (
             <header>
-                <Link to="/list"><i className="icon icon-logo"></i></Link>
+                <Link to="/"><i className="icon icon-logo"></i></Link>
                 <Link to="/new"><i className="icon icon-new"></i></Link>
             </header>
         );

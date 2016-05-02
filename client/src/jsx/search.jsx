@@ -2,6 +2,7 @@ import request from 'request';
 import React from 'react';
 import Header from './header';
 import Generic from './model';
+import { browserHistory } from 'react-router';
 
 class Search extends Generic {
     constructor(props) {
@@ -10,26 +11,49 @@ class Search extends Generic {
 
     componentDidMount() {
         this.setCoordinates();
-        this.successLocation();
-        this.setColor();
+        this.resetColor();
     };
 
-    successLocation() {
-        var that = this,
-            crd = this.state.crd,
-            url = 'https://matafome-api.herokuapp.com/';
+    setCoordinates() {
+        var options = {
+            enableHighAccuracy: true,
+            timeout: 60000,
+            maximumAge: Infinity
+        };
 
-        request({
-            url: url,
-            data: crd,
-            method: 'GET'
-        }, function(err, response, data) {
-            that.setState({
-                data: JSON.parse(data)
-            });
-            localStorage.setItem('data', JSON.stringify(that.state.data));
-            that.getCurrentAddress(that.renderMode);
+        navigator.geolocation.getCurrentPosition(this.successSetCoordinates.bind(this), this.errorSetCoordinates, options);
+    };
+
+    successSetCoordinates(pos) {
+        var crd = {
+            latitude: pos.coords.latitude,
+            longitude: pos.coords.longitude
+        };
+
+        localStorage.setItem('crd', JSON.stringify(crd));
+        this.fetchData(crd);
+    };
+
+    errorSetCoordinates() {
+        browserHistory.push('/error');
+    };
+
+    fetchData(crd) {
+        var that = this;
+        var url = 'https://matafome-api.herokuapp.com/?lat=' + crd.latitude + '&lon=' + crd.longitude;
+        
+        request.get(url, function(err, response, data) {
+            localStorage.setItem('data', data);
+            that.renderMode(JSON.parse(data));
         });
+    };
+
+    renderMode(data) {
+        if (data.total >= 1) {
+            browserHistory.push('/list');
+        } else {
+            browserHistory.push('/empty');
+        }
     };
 
     render() {
