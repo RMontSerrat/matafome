@@ -3,7 +3,7 @@ import React from 'react';
 import Generic from './model';
 import Header from './header';
 import {TicketBad} from './ticket';
-import { browserHistory } from 'react-router';
+import { hashHistory } from 'react-router';
 
 class Error extends Generic {
     constructor(props) {
@@ -60,9 +60,9 @@ class Error extends Generic {
 
     renderMode(data) {
         if (data.total >= 1) {
-            browserHistory.push('/list');
+            hashHistory.push('/list');
         } else {
-            browserHistory.push('/empty');
+            hashHistory.push('/empty');
         }
     };
 

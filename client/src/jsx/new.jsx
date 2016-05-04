@@ -1,6 +1,6 @@
 import request from 'request';
 import React from 'react';
-import { browserHistory, Link } from 'react-router'
+import { hashHistory, Link } from 'react-router'
 import Header from './header';
 import Generic from './model';
 import {TicketBad, TicketGood} from './ticket';
@@ -120,9 +120,9 @@ class New extends Generic {
 			method: 'POST'
 		}, function(err, response, data) {
 			if (data) {
-				browserHistory.push('/new/success');
+				hashHistory.push('/new/success');
 			} else {
-				browserHistory.push('/new/error');
+				hashHistory.push('/new/error');
 			}
 		});
 	};

@@ -2,7 +2,7 @@ import request from 'request';
 import React from 'react';
 import Header from './header';
 import Generic from './model';
-import { browserHistory } from 'react-router';
+import { hashHistory } from 'react-router';
 
 class Search extends Generic {
     constructor(props) {
@@ -35,7 +35,7 @@ class Search extends Generic {
     };
 
     errorSetCoordinates() {
-        browserHistory.push('/error');
+        hashHistory.push('/error');
     };
 
     fetchData(crd) {
@@ -50,9 +50,9 @@ class Search extends Generic {
 
     renderMode(data) {
         if (data.total >= 1) {
-            browserHistory.push('/list');
+            hashHistory.push('/list');
         } else {
-            browserHistory.push('/empty');
+            hashHistory.push('/empty');
         }
     };
 
