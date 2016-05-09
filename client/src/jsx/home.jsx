@@ -2,12 +2,16 @@ import React from 'react';
 import { Link } from 'react-router';
 import Generic from './model';
 
-class Home extends Generic {
+export default class Home extends Generic {
+    constructor(props, context) {
+        super(props);
+    };
+
     componentDidMount() {
         this.resetColor();
         localStorage.clear();
     };
-
+    
     render() {
         return (
             <div className="home">
@@ -22,5 +26,3 @@ class Home extends Generic {
         )
     }
 };
-
-export default Home;

@@ -1,27 +1,30 @@
-import request from 'request';
 import React from 'react';
 import Header from './header';
 import Generic from './model';
-import { hashHistory } from 'react-router';
+import {TicketBad} from './ticket';
+import fetch from 'isomorphic-fetch';
 
-class Search extends Generic {
-    constructor(props) {
+export default class Search extends Generic {
+    constructor(props, context) {
         super(props);
+        this.state = {
+            crd: this.getCoords()
+        }
     };
 
     componentDidMount() {
-        this.setCoordinates();
+        this.fetchData();
         this.resetColor();
     };
 
     setCoordinates() {
         var options = {
-            enableHighAccuracy: true,
-            timeout: 60000,
-            maximumAge: Infinity
+            enableHighAccuracy: false,
+            timeout: 10000,
+            maximumAge: 600000
         };
 
-        navigator.geolocation.getCurrentPosition(this.successSetCoordinates.bind(this), this.errorSetCoordinates, options);
+        navigator.geolocation.getCurrentPosition(this.successSetCoordinates.bind(this), this.errorSetCoordinates.bind(this), options);
     };
 
     successSetCoordinates(pos) {
@@ -31,28 +34,54 @@ class Search extends Generic {
         };
 
         localStorage.setItem('crd', JSON.stringify(crd));
-        this.fetchData(crd);
-    };
-
-    errorSetCoordinates() {
-        hashHistory.push('/error');
-    };
-
-    fetchData(crd) {
-        var that = this;
-        var url = 'https://matafome-api.herokuapp.com/?lat=' + crd.latitude + '&lon=' + crd.longitude;
-        
-        request.get(url, function(err, response, data) {
-            localStorage.setItem('data', data);
-            that.renderMode(JSON.parse(data));
+        this.setState({crd: crd}, function() {
+            this.fetchData();
         });
     };
 
-    renderMode(data) {
+    errorSetCoordinates() {
+        this.context.router.push({ pathname: '/search/error'});
+    };
+
+    getLocation() {
+        if (!_.isEmpty(this.props.location.query)) {
+            return {   
+                latitude: this.props.location.query.lat, 
+                longitude: this.props.location.query.lon
+            }
+        }
+        
+        return this.state.crd;
+    };
+
+    fetchData() {
+        var that = this;
+        var crd = this.getLocation();
+
+        if (!crd) {
+            this.setCoordinates();
+            return;
+        }
+
+        var url = 'https://matafome-api.herokuapp.com/?lat=' + crd.latitude + '&lon=' + crd.longitude;
+        
+        fetch(url)
+        .then(function(response) {
+            if (response.status >= 400) {
+                throw new Error("Bad response from server");
+            }
+            return response.json();
+        })
+        .then(function(data) {
+            that.renderMode(crd, data);
+        })
+    };
+
+    renderMode(crd, data) {
         if (data.total >= 1) {
-            hashHistory.push('/list');
+            this.context.router.push({ pathname: '/list', search: '?lat=' + crd.latitude + '&lon=' + crd.longitude, state: {data: data} });
         } else {
-            hashHistory.push('/empty');
+            this.context.router.push({ pathname:'/empty' });
         }
     };
 
@@ -68,4 +97,53 @@ class Search extends Generic {
     };
 };
 
-export default Search;
+export class ErrorSearch extends Generic {
+    constructor(props, context) {
+        super(props);
+    };
+
+    componentDidMount() {
+        this.bindAutoComplete();
+        this.invertColor();
+    };
+
+    bindAutoComplete() {
+        var that = this;
+        var input = document.querySelector("input[name='vicinity']");
+        var autocomplete = new google.maps.places.Autocomplete(input);
+        
+        autocomplete.addListener('place_changed', function() {
+            var place = autocomplete.getPlace();
+            var address = input.value;
+            
+            if (!place.geometry) {
+                return;
+            }
+            
+            var crd = {
+                latitude: place.geometry.location.lat(),
+                longitude: place.geometry.location.lng()
+            };
+
+            localStorage.setItem('address', JSON.stringify(address));
+            localStorage.setItem('crd', JSON.stringify(crd));
+
+            that.context.router.push({ pathname: '/search', search: '?lat=' + crd.latitude + '&lon=' + crd.longitude, state: {} });
+        });
+    };
+
+    render() {
+        return (
+         <div className="feedback">
+            <Header />
+            <TicketBad />
+            <h2>
+               <span>deu ruim, não te achamos. onde vc tá?</span>
+            </h2>
+            <form>
+                <input type="text" name="vicinity" placeholder="escreva aqui" />
+            </form>
+         </div>
+        )
+    }
+};

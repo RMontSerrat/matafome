@@ -81,9 +81,14 @@
          text-align: left;
          input[type="submit"] {
             margin-top: 18rem;
+            display: inline-block;
          }
          label[for="types"] {
             padding-bottom: 1rem;
+         }
+         a {
+            margin-left: 2.5rem;
+            cursor: pointer;
          }
       }
    }
@@ -108,7 +113,7 @@
       .icon-decagono {
          position: absolute;
          font-size: 3rem;
-         color: blue;
+         color: $blue;
          position: absolute;
          top: 1.2rem;
          left: -0.3rem;
@@ -119,6 +124,7 @@
          display: table-cell;
          vertical-align: middle;
          span {
+            color: $red;
             font-family: $gothan-bold;
             font-size: .8rem;
             line-height: .8rem;

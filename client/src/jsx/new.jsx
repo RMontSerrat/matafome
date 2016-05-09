@@ -1,19 +1,23 @@
-import request from 'request';
 import React from 'react';
 import { hashHistory, Link } from 'react-router'
 import Header from './header';
 import Generic from './model';
 import {TicketBad, TicketGood} from './ticket';
+import fetch from 'isomorphic-fetch';
+
 class New extends Generic {
-	constructor(props) {
+	constructor(props, context) {
 		super(props);
+        this.state = {
+            crd: this.getCoords(),
+            address: this.getAddress()
+        };
 	};
 	
 	componentDidMount() {
-		initMap();
+        this.resetColor();
 		this.bindSubmit();
 		this.renderMap();
-        this.resetColor();
 	};
 
 	getTypes() {
@@ -22,7 +26,7 @@ class New extends Generic {
 		});
 	};
 
-	getAddress(endereco) {
+	getCurrentAddress(endereco) {
 		var that = this;
 		var geocoder = new google.maps.Geocoder();
 
@@ -33,7 +37,9 @@ class New extends Generic {
 						latitude: results[0].geometry.location.lat(),
 						longitude: results[0].geometry.location.lng()
 					};
-					that.save(crd);
+					that.setState({
+						crd: crd
+					}, that.save.bind(that))
 				}
 			}
 		});
@@ -45,12 +51,13 @@ class New extends Generic {
 		document.querySelector('form').addEventListener('submit', function (e) {
 			e.preventDefault();
 			var endereco = document.querySelector('input[name="vicinity"]').value;
-			that.getAddress(endereco);
+			that.getCurrentAddress(endereco);
 		});
 	};
 
 	renderMap() {
-		var latlng = new google.maps.LatLng(this.state.crd.latitude, this.state.crd.longitude);
+		var crd = this.state.crd || {latitude: -22.9134, longitude: -43.2007};
+		var latlng = new google.maps.LatLng(crd.latitude, crd.longitude);
 		var directionsDisplay = new google.maps.DirectionsRenderer();
 		var options = {
 			zoom: 17,
@@ -104,28 +111,37 @@ class New extends Generic {
 		});
 	};
 
-	save(crd) {
+	save() {
 		var that = this;
 		var data = {
 			name: document.querySelector('input[name="name"]').value,
 			vicinity: document.querySelector('input[name="vicinity"]').value,
 			location: {
-				lat: crd.latitude, 
-				lon: crd.longitude
+				lat: this.state.crd.latitude, 
+				lon: this.state.crd.longitude
 			}
 		};
-		request({
-			url: 'https://matafome-api.herokuapp.com/add/',
-			json: data,
-			method: 'POST'
-		}, function(err, response, data) {
-			if (data) {
-				hashHistory.push('/new/success');
-			} else {
-				hashHistory.push('/new/error');
-			}
-		});
+		fetch('https://matafome-api.herokuapp.com/add/', {
+			method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+		})
+        .then(function(response) {
+            if (response.ok) {
+                that.context.router.push('/new/success');
+            } else {
+                that.context.router.push('/new/error');
+            }
+        })
 	};
+
+    cancel(e) {
+        e.preventDefault();
+        this.context.router.goBack();
+    };
 
 	render() {
 		return (
@@ -134,7 +150,7 @@ class New extends Generic {
 				<h3>novo podrão</h3>
 				<form>
 					<input type="text" name="name" placeholder="nome do podrão" required="required" />
-					<input type="text" name="vicinity" placeholder="onde fica?" required="required" defaultValue={this.state.address} />
+					<input type="text" name="vicinity" placeholder="onde fica?" required="required" defaultValue={_.isEmpty(this.state.address) ? '' : this.state.address} />
 					<div id="map2"></div>
 					{/* <label for="opening_hours">horário de funcionamento</label> 
 					<input type="text" name="opening_hours[]" placeholder="de" />
@@ -157,6 +173,7 @@ class New extends Generic {
 					<input type="checkbox" id="outros" name="types[]" value="outros" />
 					<label htmlFor="outros" id="outros">outros</label>*/}
 					<input type="submit" id="enviar" value="pronto!" />
+                    <a href="#" onClick={this.cancel.bind(this)}>cancelar</a>
 				</form>
 			</div>
 		)
@@ -170,10 +187,10 @@ export class ErrorNew extends Generic {
 
 	render() {
 		return (
-		 <div className="search">
+		 <div className="feedback">
 			<Header />
 			<TicketBad />
-			<h2 className="loading">
+			<h2>
 			   <span>eita, deu ruim, tenta adicionar de novo?</span>
 			</h2>
 			<Link to="/new">
@@ -191,10 +208,10 @@ export class SuccessNew extends Generic {
 
 	render() {
 		return (
-		 <div className="search">
+		 <div className="feedback">
 			<Header />
 			<TicketGood />
-			<h2 className="loading">
+			<h2>
 			   <span>oba! podrão novo na área. obrigado!</span>
 			</h2>
 			<Link to="/search">

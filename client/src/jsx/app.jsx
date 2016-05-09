@@ -1,25 +1,33 @@
 import React from 'react';
 import { render } from 'react';
-import { Router, Route, Link, hashHistory, IndexRoute } from 'react-router'
+import { Router, Route, useRouterHistory, IndexRoute } from 'react-router'
 import Home from './home';
-import Search from './search';
-import List from './list';
+import Search, {ErrorSearch} from './search';
+import List, {EndList} from './list';
 import New, {ErrorNew, SuccessNew} from './new';
-import Error from './error';
 import Empty from './empty';
+import {TicketBad} from './ticket';
+import { createHashHistory } from 'history'
+
+const history = useRouterHistory(createHashHistory)();
 
 render((
-  <Router history={hashHistory}>
+  <Router history={history}>
     <Route path="/">
         <IndexRoute component={Home} />
-        <Route path="list" component={List} /> 
+        <Route path="list">
+            <IndexRoute component={List} />
+            <Route path="end" component={EndList} />
+        </Route> 
         <Route path="new">
             <IndexRoute component={New} />
             <Route path="error" component={ErrorNew} />
             <Route path="success" component={SuccessNew} />
         </Route>
-        <Route path="search" component={Search} />
-        <Route path="error" component={Error} />
+        <Route path="search">
+            <IndexRoute component={Search} />
+            <Route path="error" component={ErrorSearch} />
+        </Route>
     </Route>
     <Route path="*" component={Empty} />
   </Router>

@@ -2,13 +2,8 @@ import React from 'react';
 import _ from 'lodash';
 
 export default class Generic extends React.Component {
-    constructor(props) {
+    constructor(props, context) {
         super(props);
-        this.state = {
-            crd: localStorage.crd ? JSON.parse(localStorage.crd) : {},
-            data: localStorage.data ? JSON.parse(localStorage.data) : {},
-            address: localStorage.address ? JSON.parse(localStorage.address) : {}
-        };
     };
 
     componentDidMount() {
@@ -25,7 +20,19 @@ export default class Generic extends React.Component {
         body.classList.add('invert');
     };
 
-    render() {
-        return '';
+    getCoords() {
+        if (localStorage.crd) {
+            return JSON.parse(localStorage.crd);
+        }
     };
+
+    getAddress() {
+        if (localStorage.address) {
+            return JSON.parse(localStorage.address);
+        }
+    };
+};
+
+Generic.contextTypes = {
+    router: React.PropTypes.object
 };

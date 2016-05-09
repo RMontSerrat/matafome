@@ -1,7 +1,8 @@
 import React from 'react';
 import Header from './header';
-import Ticket, {TicketGood} from './ticket';
+import Ticket, {TicketGood, TicketBad} from './ticket';
 import Generic from './model';
+import { Link } from 'react-router';
 
 
 class Botao extends Ticket {
@@ -20,34 +21,42 @@ class Botao extends Ticket {
     };
 };
 
-class List extends Generic {
-    constructor(props) {
+export default class List extends Generic {
+    constructor(props, context) {
         super(props);
-        _.extend(this.state, {
-            podrao: this.state.data.podroes[0]._source, 
-            i: 0
-        });
+        this.state = {
+            podrao: this.props.location.state ? this.props.location.state.data.podroes[0]._source : {}, 
+            i: 0,
+            address: this.getAddress()
+        }
     };
 
     componentDidMount() {
+        this.verifyData();
         this.invertColor();
         this.renderMap();
     };
 
-    componentDidUpdate() {
-        this.renderMap();
+    verifyData() {
+        if(_.isEmpty(this.state.podrao)) {
+            this.context.router.push({ pathname: '/search', search: '?lat=' + this.props.location.query.lat + '&lon=' + this.props.location.query.lon, state: {} });
+        };
     };
 
     update() {
+        var that = this;
         var i = this.state.i;
 
-        if(i >= this.state.data.podroes.length-1) {
-            i = -1;
+        if(i >= this.props.location.state.data.podroes.length-1) {
+            this.context.router.push('/list/end');
+            return;
         }
 
         this.setState({
-            podrao: this.state.data.podroes[i+1]._source,
+            podrao: this.props.location.state.data.podroes[i+1]._source,
             i: i+1
+        }, function () {
+            that.renderMap();
         });
     };
 
@@ -63,22 +72,9 @@ class List extends Generic {
         });
     };
 
-    renderCard() {
-        var podrao = this.state.podrao;
-
-        return (
-            <div className="card-informations">
-                <h1>{podrao.name}</h1>
-                { /*<ul className="card-types">{this.rendeTypes()}</ul> */}
-                <p>{podrao.vicinity}</p>
-                <TicketGood /> 
-           </div>
-        )
-    };
-
     getCurrentAddress(directionsDisplay) {
         var that = this;
-        var latlng = new google.maps.LatLng(this.state.crd.latitude, this.state.crd.longitude);
+        var latlng = new google.maps.LatLng(this.props.location.query.lat, this.props.location.query.lon);
         var geocoder = new google.maps.Geocoder();
 
         geocoder.geocode({
@@ -87,32 +83,42 @@ class List extends Generic {
         function(results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
                 var address = results[0].formatted_address;
+                
                 localStorage.setItem('address', JSON.stringify(address));
-                that.renderRoute(directionsDisplay, address);
+                
+                that.setState({
+                    address: address
+                }, function () {
+                    that.renderRoute(directionsDisplay);
+                });
             }
         });
     };
 
     renderMap() {
-        console.log(this.state);
         var map;
         var directionsDisplay = new google.maps.DirectionsRenderer();
         var options = {
             zoom: 17,
-            center: new google.maps.LatLng(this.state.crd.latitude, this.state.crd.longitude),
+            center: new google.maps.LatLng(this.props.location.query.lat, this.props.location.query.lon),
             mapTypeId: google.maps.MapTypeId.ROADMAP
         };
          
         map = new google.maps.Map(document.getElementById('map'), options);
         directionsDisplay.setMap(map);
-        this.getCurrentAddress(directionsDisplay);
+        
+        if(_.isEmpty(this.state.address)) {
+            this.getCurrentAddress(directionsDisplay);
+        } else {
+            this.renderRoute(directionsDisplay);
+        }
     };
 
-    renderRoute(directionsDisplay, address) {
+    renderRoute(directionsDisplay) {
         var that = this;
         var directionsService = new google.maps.DirectionsService();
         var request = { 
-            origin: address,
+            origin: this.state.address,
             destination: this.state.podrao.vicinity,
             travelMode: google.maps.TravelMode.DRIVING
         };
@@ -124,15 +130,40 @@ class List extends Generic {
     };
 
     render() {
+        var podrao = this.state.podrao;
+
         return (
             <section className="card">
                 <Header />
-                {this.renderCard()}
-                <Botao onClick={this.update.bind(this)} />
+                <div className="card-informations">
+                    <h1>{podrao.name}</h1>
+                    <p>{podrao.vicinity}</p>
+                    <TicketGood /> 
+               </div>
+               <Botao onClick={this.update.bind(this)} />
                 <div id="map"></div>
             </section>
         )
     };
 };
 
-export default List;
+export class EndList extends Generic {
+    componentDidMount() {
+        this.resetColor();
+    };
+
+    render() {
+        return (
+         <div className="feedback">
+            <Header />
+            <TicketBad />
+            <h2>
+               <span>não existem mais podrões próximos</span>
+            </h2>
+            <Link to="/search">
+                <button>explorar podrões</button>
+            </Link>
+         </div>
+        )
+    }
+};

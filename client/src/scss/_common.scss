@@ -1,6 +1,6 @@
 body {
    width: 100%;
-   height: 100%;
+   height: auto;
    text-align: center;
    font-family: $sec;
    font-size: 22px;
@@ -9,7 +9,7 @@ body {
    transition-duration: .5s;
    transition-timing-function: ease-out;
    #container {
-      .icon-logo, .icon-new, p, li, h1, h2, h3, h4, span {
+      .icon-logo, .icon-new, p, li, h1, h2, h3, h4, span, a, a:focus {
          color: $red;
          transition-duration: .5s;
          transition-timing-function: ease-out;
