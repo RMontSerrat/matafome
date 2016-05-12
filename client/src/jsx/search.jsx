@@ -90,7 +90,7 @@ export default class Search extends Generic {
             <div className="search">
                 <Header />
                 <h2 className="loading">
-                    <span>procurando podrões bem, bem gordurosos...</span>
+                    <span>procurando podrões bem, bem gordurosos</span>
                 </h2>
             </div>
         )

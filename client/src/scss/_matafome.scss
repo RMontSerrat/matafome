@@ -101,6 +101,31 @@
       .ticket-card {
          top: 12.5rem;
       }
+      .loading {
+         span {
+            &:after {
+              overflow: hidden;
+              display: inline-block;
+              vertical-align: bottom;
+              -webkit-animation: ellipsis steps(4,end) 900ms infinite;      
+              animation: ellipsis steps(4,end) 900ms infinite;
+              content: "\2026";
+              width: 0px;
+            }
+
+            @keyframes ellipsis {
+              to {
+                width: 4rem;    
+              }
+            }
+
+            @-webkit-keyframes ellipsis {
+              to {
+                width: 4rem;    
+              }
+            }
+         }
+      }
    }
    .ticket-card {
       width: 2.5rem;
