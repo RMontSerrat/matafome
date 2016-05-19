@@ -63,7 +63,7 @@ export default class Search extends Generic {
             return;
         }
 
-        var url = 'https://matafome-api.herokuapp.com/?lat=' + crd.latitude + '&lon=' + crd.longitude;
+        var url = HOST + '?lat=' + crd.latitude + '&lon=' + crd.longitude;
         
         fetch(url)
         .then(function(response) {

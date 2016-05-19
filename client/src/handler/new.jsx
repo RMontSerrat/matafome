@@ -20,12 +20,6 @@ class New extends Generic {
 		this.renderMap();
 	};
 
-	getTypes() {
-		return [].slice.call(document.querySelectorAll('input[name="types[]"]:checked')).map(function (type) {
-			return type.value;
-		});
-	};
-
 	getCurrentAddress(endereco) {
 		var that = this;
 		var geocoder = new google.maps.Geocoder();
@@ -56,8 +50,7 @@ class New extends Generic {
 	};
 
 	renderMap() {
-		var crd = this.state.crd || {latitude: -22.9134, longitude: -43.2007};
-		var latlng = new google.maps.LatLng(crd.latitude, crd.longitude);
+		var latlng = new google.maps.LatLng(-22.9134, -43.2007);
 		var directionsDisplay = new google.maps.DirectionsRenderer();
 		var options = {
 			zoom: 17,
@@ -66,19 +59,16 @@ class New extends Generic {
 		};
 
 		var map = new google.maps.Map(document.getElementById('map2'), options);
+        var marker = new google.maps.Marker({
+                map: map,
+                draggable: true,
+                animation: google.maps.Animation.DROP,
+                icon: '../../src/img/icone_local.png'
+            });
 
-		this.markMap(latlng, map);
-	};
-
-	markMap(latlng, map) {
-		var marker = new google.maps.Marker({
-				map: map,
-				draggable: true
-			});
-
-		marker.setPosition(latlng);
-		this.bindDragMap(marker);
-		this.bindAutoComplete(map, marker);
+        marker.setPosition(latlng);
+        this.bindDragMap(marker);
+        this.bindAutoComplete(map, marker);
 	};
 
 	bindDragMap(marker) {
@@ -150,28 +140,8 @@ class New extends Generic {
 				<h3>novo podrão</h3>
 				<form>
 					<input type="text" name="name" placeholder="nome do podrão" required="required" />
-					<input type="text" name="vicinity" placeholder="onde fica?" required="required" defaultValue={_.isEmpty(this.state.address) ? '' : this.state.address} />
+					<input type="text" name="vicinity" placeholder="endereço" required="required" />
 					<div id="map2"></div>
-					{/* <label for="opening_hours">horário de funcionamento</label> 
-					<input type="text" name="opening_hours[]" placeholder="de" />
-					<input type="text" name="opening_hours[]" placeholder="ate" />
-					<label className="types" htmlFor="types">o que tem lá?</label>
-					<input type="checkbox" id="burguer" name="types[]" value="burguer" />
-					<label htmlFor="burguer">burguer</label>
-					<input type="checkbox" id="cachorro" name="types[]" value="cachorro" />
-					<label htmlFor="cachorro">cachorro</label>
-					<input type="checkbox" id="churrasquinho" name="types[]" value="churrasquinho" />
-					<label htmlFor="churrasquinho">churras</label>
-					<input type="checkbox" id="caldos" name="types[]" value="caldos" />
-					<label htmlFor="caldos">caldos</label>
-					<input type="checkbox" id="tapioca" name="types[]" value="tapioca" />
-					<label htmlFor="tapioca" id="tapioca">tapioca</label>
-					<input type="checkbox" id="pastel" name="types[]" value="pastel" />
-					<label htmlFor="pastel" id="pastel">pastel</label>
-					<input type="checkbox" id="batata" name="types[]" value="batata" />
-					<label htmlFor="batata" id="batata">batata</label>
-					<input type="checkbox" id="outros" name="types[]" value="outros" />
-					<label htmlFor="outros" id="outros">outros</label>*/}
 					<input type="submit" id="enviar" value="pronto!" />
                     <a href="#" onClick={this.cancel.bind(this)}>cancelar</a>
 				</form>

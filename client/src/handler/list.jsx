@@ -4,14 +4,13 @@ import Ticket, {TicketGood, TicketBad} from './ticket';
 import Generic from './model';
 import { Link } from 'react-router';
 
-
 class Botao extends Ticket {
     constructor(props) {
         super(props);
     };
 
     getArray() {
-        return config.button;
+        return TICKET.button;
     };
 
     render() {
@@ -60,18 +59,6 @@ export default class List extends Generic {
         });
     };
 
-    rendeTypes() {
-        var types = this.state.podrao.types;
-        return types.map(function (type, key) {
-            var space = '';
-            if(key < types.length - 1) {
-                space = '•';
-            };
-
-            return <li key={key}>{type + ' ' + space}</li>
-        });
-    };
-
     getCurrentAddress(directionsDisplay) {
         var that = this;
         var latlng = new google.maps.LatLng(this.props.location.query.lat, this.props.location.query.lon);
@@ -89,42 +76,65 @@ export default class List extends Generic {
                 that.setState({
                     address: address
                 }, function () {
-                    that.renderRoute(directionsDisplay);
+                    that.renderRoute();
                 });
             }
         });
     };
 
     renderMap() {
-        var map;
-        var directionsDisplay = new google.maps.DirectionsRenderer();
-        var options = {
-            zoom: 17,
-            center: new google.maps.LatLng(this.props.location.query.lat, this.props.location.query.lon),
-            mapTypeId: google.maps.MapTypeId.ROADMAP
-        };
-         
-        map = new google.maps.Map(document.getElementById('map'), options);
-        directionsDisplay.setMap(map);
-        
         if(_.isEmpty(this.state.address)) {
-            this.getCurrentAddress(directionsDisplay);
+            this.getCurrentAddress();
         } else {
-            this.renderRoute(directionsDisplay);
+            this.renderRoute();
         }
     };
 
     renderRoute(directionsDisplay) {
         var that = this;
+        var map;
+        var directionsDisplay = new google.maps.DirectionsRenderer();
+        var options = {
+            zoom: 18,
+            center: new google.maps.LatLng(this.props.location.query.lat, this.props.location.query.lon),
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+         
+        map = new google.maps.Map(document.getElementById('map'), options);
         var directionsService = new google.maps.DirectionsService();
         var request = { 
             origin: this.state.address,
             destination: this.state.podrao.vicinity,
             travelMode: google.maps.TravelMode.DRIVING
         };
+
         directionsService.route(request, function(result, status) {
             if (status == google.maps.DirectionsStatus.OK) {
+                var leg = result.routes[0].legs[0];
+                var mStart = new google.maps.Marker({
+                    icon: '../../src/img/icone_local.png',
+                    position: leg.start_location,
+                    map: map,
+                    animation: google.maps.Animation.DROP
+                });
+
+                var mEnd = new google.maps.Marker({
+                    icon: '../../src/img/icone_mapa.png',
+                    position: leg.end_location,
+                    map: map,
+                    animation: google.maps.Animation.DROP
+                });
+
                 directionsDisplay.setDirections(result);
+                directionsDisplay.setOptions({
+                    suppressMarkers: true,
+                    polylineOptions: {
+                        strokeWeight: 6,
+                        strokeOpacity: 0.7,
+                        strokeColor:  '#ff002b'
+                    }
+                });
+                directionsDisplay.setMap(map);
             }
         });
     };

@@ -45,7 +45,7 @@ export class TicketGood extends Ticket {
     };
 
     getArray() {
-        return config.good;
+        return TICKET.good;
     };
 };
 
@@ -55,7 +55,7 @@ export class TicketBad extends Ticket {
     };
 
     getArray() {
-        return config.bad;
+        return TICKET.bad;
     };
 
 };
