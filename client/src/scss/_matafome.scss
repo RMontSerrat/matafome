@@ -1,4 +1,98 @@
+body {
+   width: 100%;
+   height: auto;
+   text-align: center;
+   font-family: $sec;
+   font-size: 22px;
+   background-color: $yellow;
+   color: $red;
+   transition-duration: .5s;
+   transition-timing-function: ease-out;
+   #container {
+      .icon-logo, .icon-new, p, li, h1, h2, h3, h4, span, a, a:focus {
+         color: $red;
+         transition-duration: .5s;
+         transition-timing-function: ease-out;
+      }
+      button, button:hover, button:focus, input[type="submit"] {
+         color: $yellow;
+         background-color: $red;
+         transition-duration: .5s;
+         transition-timing-function: ease-out;
+      }
+      select, input[type="text"] {
+         color: $red;
+         border-color: $red;
+         transition-duration: .5s;
+         transition-timing-function: ease-out;
+      }
+      ::-webkit-input-placeholder {
+         color: $red;
+         transition-duration: .5s;
+         transition-timing-function: ease-out;
+      }
+
+      :-moz-placeholder {
+         color: $red;
+         transition-duration: .5s;
+         transition-timing-function: ease-out;
+      }
+
+      ::-moz-placeholder {
+         color: $red;
+         transition-duration: .5s;
+         transition-timing-function: ease-out;
+      }
+
+      :-ms-input-placeholder {  
+         color: $red;
+         transition-duration: .5s;
+         transition-timing-function: ease-out;
+      }
+   }
+   &.invert {
+      color: $yellow;
+      background-color: $red;
+      #container {
+         p, li, h1, h2, h3, span, .icon-logo, .icon-new {
+            color: $yellow;
+         }
+         button, button:hover, button:focus, input[type="submit"] {
+            background-color: $yellow;
+            color: $red;
+         }
+         select, input {
+            color: $yellow;
+            border-color: $yellow;
+         }
+         ::-webkit-input-placeholder {
+            color: $yellow;
+         }
+
+         :-moz-placeholder {
+            color: $yellow;
+         }
+
+         ::-moz-placeholder {
+            color: $yellow;
+         }
+
+         :-ms-input-placeholder {  
+            color: $yellow;
+         }
+      }
+   }
+}
+
 #container {
+   max-width: 22rem;
+   width: 100%;
+   padding: 2rem;
+   float: none;
+   h3 {
+      clear: both;
+      font-size: 35px;
+   }
    .bg {
       background-image: url('../../src/img/bg.png');
       background-repeat: no-repeat;
