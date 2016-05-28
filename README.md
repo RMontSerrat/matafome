@@ -1,7 +1,7 @@
 ##CLIENT
 npm install
 <br />
-gulp watch
+npm start
 
 ##API
 pip install -r requeriments.txt
@@ -10,4 +10,4 @@ python ./manage.py
 <br />
 <br />
 
->É necessário Elasticsearch rodando na porta 9200*
+>É necessário Elasticsearch rodando na porta 9200
