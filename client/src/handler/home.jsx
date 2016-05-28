@@ -3,10 +3,6 @@ import { Link } from 'react-router';
 import Generic from './model';
 
 export default class Home extends Generic {
-    constructor(props, context) {
-        super(props);
-    };
-
     componentDidMount() {
         this.resetColor();
         localStorage.clear();

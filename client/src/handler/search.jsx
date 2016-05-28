@@ -1,8 +1,9 @@
 import React from 'react';
 import Header from './header';
 import Generic from './model';
-import {TicketBad} from './ticket';
+import Ticket from './ticket';
 import fetch from 'isomorphic-fetch';
+import isEmpty from 'lodash/isEmpty';
 
 export default class Search extends Generic {
     constructor(props, context) {
@@ -44,7 +45,7 @@ export default class Search extends Generic {
     };
 
     getLocation() {
-        if (!_.isEmpty(this.props.location.query)) {
+        if (!isEmpty(this.props.location.query)) {
             return {   
                 latitude: this.props.location.query.lat, 
                 longitude: this.props.location.query.lon
@@ -68,9 +69,12 @@ export default class Search extends Generic {
         fetch(url)
         .then(function(response) {
             if (response.status >= 400) {
-                throw new Error("Bad response from server");
+                that.context.router.push({pathname: '/serverError'})
             }
             return response.json();
+        }, function(err) {
+            console.log(err);
+            that.context.router.push({pathname: '/serverError'})
         })
         .then(function(data) {
             that.renderMode(crd, data);
@@ -136,7 +140,7 @@ export class ErrorSearch extends Generic {
         return (
          <div className="feedback">
             <Header />
-            <TicketBad />
+            <Ticket array={TICKET.bad} />
             <h2>
                <span>deu ruim, não te achamos. onde vc tá?</span>
             </h2>

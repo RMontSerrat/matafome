@@ -26,6 +26,9 @@ body {
          transition-duration: .5s;
          transition-timing-function: ease-out;
       }
+      input[type="text"]:focus {
+         background-color: $yellow;
+      }
       ::-webkit-input-placeholder {
          color: $red;
          transition-duration: .5s;
@@ -61,9 +64,12 @@ body {
             background-color: $yellow;
             color: $red;
          }
-         select, input {
+         select, input[type="text"] {
             color: $yellow;
             border-color: $yellow;
+         }
+         input[type="text"]:focus {
+            background-color: $red;
          }
          ::-webkit-input-placeholder {
             color: $yellow;

@@ -1,4 +1,4 @@
-HOST = 'http://localhost:5000/';
+HOST = 'https://matafome-api.herokuapp.com/';
 
 TICKET = {
     button: ['outro!', 'manda outro', 'passa!'],

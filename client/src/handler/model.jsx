@@ -1,5 +1,4 @@
 import React from 'react';
-import _ from 'lodash';
 
 export default class Generic extends React.Component {
     constructor(props, context) {
@@ -30,6 +29,11 @@ export default class Generic extends React.Component {
         if (localStorage.address) {
             return JSON.parse(localStorage.address);
         }
+    };
+
+    cancel(e) {
+        e.preventDefault();
+        this.context.router.goBack();
     };
 };
 

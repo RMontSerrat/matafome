@@ -1,26 +1,26 @@
 import React from 'react';
-import Header from './header';
 import Generic from './model';
+import Header from './header';
 import Ticket from './ticket';
 import { Link } from 'react-router';
 
-export default class Empty extends Generic {
+export default class ServerError extends Generic {
     componentDidMount() {
         this.invertColor();
     };
 
     render() {
-      return (
+        return (
          <div className="feedback">
             <Header />
             <Ticket array={TICKET.bad} />
             <h2>
-                <span>não achamos nenhum perto de você :(</span>
-                <Link to="/new">
-                  <button>adicionar podrão</button>
-                </Link>
+               <span>deu ruim, erro no servidor. Tenta de novo!</span>
             </h2>
+            <Link to="/search">
+                <button>explorar podrões</button>
+            </Link>
          </div>
-      )
-    };
+        )
+    }
 };

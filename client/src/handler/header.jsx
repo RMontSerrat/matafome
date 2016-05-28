@@ -2,7 +2,7 @@ import React from 'react';
 import Generic from './model';
 import { Link } from 'react-router';
 
-class Header extends Generic {
+export default class Header extends Generic {
     render() {
         return (
             <header>
@@ -12,5 +12,3 @@ class Header extends Generic {
         );
     }
 };
-
-export default Header;

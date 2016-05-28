@@ -1,16 +1,13 @@
 import React from 'react';
 import Header from './header';
-import Ticket, {TicketGood, TicketBad} from './ticket';
+import Ticket from './ticket';
 import Generic from './model';
 import { Link } from 'react-router';
+import isEmpty from 'lodash/isEmpty';
 
 class Botao extends Ticket {
     constructor(props) {
         super(props);
-    };
-
-    getArray() {
-        return TICKET.button;
     };
 
     render() {
@@ -37,7 +34,7 @@ export default class List extends Generic {
     };
 
     verifyData() {
-        if(_.isEmpty(this.state.podrao)) {
+        if(isEmpty(this.state.podrao)) {
             this.context.router.push({ pathname: '/search', search: '?lat=' + this.props.location.query.lat + '&lon=' + this.props.location.query.lon, state: {} });
         };
     };
@@ -83,7 +80,7 @@ export default class List extends Generic {
     };
 
     renderMap() {
-        if(_.isEmpty(this.state.address)) {
+        if(isEmpty(this.state.address)) {
             this.getCurrentAddress();
         } else {
             this.renderRoute();
@@ -148,9 +145,9 @@ export default class List extends Generic {
                 <div className="card-informations">
                     <h1>{podrao.name}</h1>
                     <p>{podrao.vicinity}</p>
-                    <TicketGood /> 
+                    <Ticket array={TICKET.good} /> 
                </div>
-               <Botao onClick={this.update.bind(this)} />
+               <Botao onClick={this.update.bind(this)} array={TICKET.button} />
                 <div id="map"></div>
             </section>
         )
@@ -166,7 +163,7 @@ export class EndList extends Generic {
         return (
          <div className="feedback">
             <Header />
-            <TicketBad />
+            <Ticke array={TICKET.bad} />
             <h2>
                <span>não existem mais podrões próximos</span>
             </h2>

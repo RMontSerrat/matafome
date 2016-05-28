@@ -6,8 +6,8 @@ import Search, {ErrorSearch} from './search';
 import List, {EndList} from './list';
 import New, {ErrorNew, SuccessNew} from './new';
 import Empty from './empty';
-import {TicketBad} from './ticket';
 import { createHashHistory } from 'history'
+import ServerError from './error'
 
 const history = useRouterHistory(createHashHistory)();
 
@@ -29,6 +29,7 @@ render((
             <Route path="error" component={ErrorSearch} />
         </Route>
     </Route>
+    <Route path="serverError" component={ServerError} />
     <Route path="*" component={Empty} />
   </Router>
 ),   document.getElementById('container'))

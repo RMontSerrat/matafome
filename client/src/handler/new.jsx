@@ -2,10 +2,10 @@ import React from 'react';
 import { hashHistory, Link } from 'react-router'
 import Header from './header';
 import Generic from './model';
-import {TicketBad, TicketGood} from './ticket';
+import Ticket from './ticket';
 import fetch from 'isomorphic-fetch';
 
-class New extends Generic {
+export default class New extends Generic {
 	constructor(props, context) {
 		super(props);
         this.state = {
@@ -101,17 +101,22 @@ class New extends Generic {
 		});
 	};
 
+    getData() {
+        return {
+            name: document.querySelector('input[name="name"]').value,
+            vicinity: document.querySelector('input[name="vicinity"]').value,
+            location: {
+                lat: this.state.crd.latitude, 
+                lon: this.state.crd.longitude
+            }
+        };
+    };
+
 	save() {
 		var that = this;
-		var data = {
-			name: document.querySelector('input[name="name"]').value,
-			vicinity: document.querySelector('input[name="vicinity"]').value,
-			location: {
-				lat: this.state.crd.latitude, 
-				lon: this.state.crd.longitude
-			}
-		};
-		fetch('https://matafome-api.herokuapp.com/add/', {
+		var data = this.getData();
+		
+        fetch(HOST + 'add/', {
 			method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -125,13 +130,11 @@ class New extends Generic {
             } else {
                 that.context.router.push('/new/error');
             }
+        }, function(err) {
+            console.log(err);
+            that.context.router.push({pathname: '/serverError'});
         })
 	};
-
-    cancel(e) {
-        e.preventDefault();
-        this.context.router.goBack();
-    };
 
 	render() {
 		return (
@@ -159,7 +162,7 @@ export class ErrorNew extends Generic {
 		return (
 		 <div className="feedback">
 			<Header />
-			<TicketBad />
+			<Ticket array={TICKET.bad} />
 			<h2>
 			   <span>eita, deu ruim, tenta adicionar de novo?</span>
 			</h2>
@@ -180,7 +183,7 @@ export class SuccessNew extends Generic {
 		return (
 		 <div className="feedback">
 			<Header />
-			<TicketGood />
+			<Ticket array={TICKET.good} />
 			<h2>
 			   <span>oba! podrão novo na área. obrigado!</span>
 			</h2>
@@ -191,6 +194,3 @@ export class SuccessNew extends Generic {
 		)
 	}
 };
-
-
-export default New;

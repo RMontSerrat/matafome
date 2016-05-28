@@ -36,27 +36,32 @@ mapping = {
   }
 }
 
-def index_elasticsearch(data):
-   body = json.dumps(data)
+
+def get_obj(data):
+   obj = {
+      'name': data['name'],
+      'vicinity': data['vicinity'],
+      'crd': data['crd']
+   }
+
+   return json.dumps(obj)
+
+def save(data):
+   if 'street_address' in data['types'] or 'route' in data['types']:
+      body = get_obj(data)
+      index_elasticsearch(body)
+
+def index_elasticsearch(body):
    es.index(index="matafome", doc_type="podrao", body=body)
 
 def create_mapping(index):
   	es.indices.create(index=index, body=mapping)
 
-def update_likes(id):
-	query = {"fields": ["likes"], "query": {"match": {"_id": id}}}
+def update(id, field):
+	query = {"fields": [field], "query": {"match": {"_id": id}}}
 	result = es.search(index="matafome", doc_type="podrao", body=query)
-	
-	likes = int(result["hits"]["hits"][0]["fields"]["likes"][0])
-	body = {"doc": {"likes": likes+1}}
 
-	es.update(index="matafome", doc_type="podrao", id=id, body=body)
-
-def update_complaints(id):
-	query = {"fields": ["complaints"], "query": {"match": {"_id": id}}}
-	result = es.search(index="matafome", doc_type="podrao", body=query)
-	
-	complaints = int(result["hits"]["hits"][0]["fields"]["complaints"][0])
-	body = {"doc": {"complaints": complaints+1}}
+	likes = int(result["hits"]["hits"][0]["fields"][field][0])
+	body = {"doc": {field: likes+1}}
 
 	es.update(index="matafome", doc_type="podrao", id=id, body=body)
