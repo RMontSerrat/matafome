@@ -47,9 +47,9 @@ export default class New extends Default {
                     var data = {
                         name: that.getInputName(),
                         vicinity: results[0].formatted_address,
-                        crd: {
-                            latitude: results[0].geometry.location.lat(),
-                            longitude: results[0].geometry.location.lng()
+                        location: {
+                            lat: results[0].geometry.location.lat(),
+                            lon: results[0].geometry.location.lng()
                         },
                         types: results[0].types
                     };

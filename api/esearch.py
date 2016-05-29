@@ -40,7 +40,7 @@ def get_obj(data):
 	 obj = {
 			'name': data['name'],
 			'vicinity': data['vicinity'],
-			'crd': data['crd']
+			'location': data['location']
 	 }
 
 	 return json.dumps(obj)
