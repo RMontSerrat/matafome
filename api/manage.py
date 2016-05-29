@@ -3,9 +3,12 @@ import json
 from flask import Flask, request, render_template, jsonify
 from flask.ext.cors import CORS
 from filter_esearch import search_podroes
-from commands.esearch import save, update
+from commands.esearch import save, update, create_index
+from elasticsearch import Elasticsearch
+
 app = Flask(__name__)
 CORS(app)
+es = Elasticsearch()
 
 @app.route("/")
 def podroes():
@@ -37,6 +40,11 @@ def complaint():
 		update(id=request.json["id"], field="complaint")
 		return ""
 
-if __name__ == '__main__':
-	app.run(debug=True, use_reloader=True, threaded=True)
+def flaskrun(app, debug=True, port="5000"):
+	if not es.indices.exists(index="matafome"):
+		create_index(index="matafome")
+	
+	app.run(debug=debug, port=int(port))
 
+if __name__ == '__main__':
+	flaskrun(app)
