@@ -1,14 +1,10 @@
 import React from 'react';
-import Generic from './model';
+import {Invert} from './model';
 import Header from './header';
-import Ticket from './ticket';
 import { Link } from 'react-router';
+import {ErrorBar, Ticket} from './components';
 
-export default class ServerError extends Generic {
-    componentDidMount() {
-        this.invertColor();
-    };
-
+export default class ServerError extends Invert {
     render() {
         return (
          <div className="feedback">
@@ -20,6 +16,7 @@ export default class ServerError extends Generic {
             <Link to="/search">
                 <button>explorar podrões</button>
             </Link>
+            <ErrorBar />
          </div>
         )
     }

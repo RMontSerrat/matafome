@@ -1,13 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router';
-import Generic from './model';
+import {Default} from './model';
 
-export default class Home extends Generic {
-    componentDidMount() {
-        this.resetColor();
-        localStorage.clear();
-    };
-    
+export default class Home extends Default {
     render() {
         return (
             <div className="home">

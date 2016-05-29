@@ -1,8 +1,7 @@
 import React from 'react';
-import Generic from './model';
 import { Link } from 'react-router';
 
-export default class Header extends Generic {
+export default class Header extends React.Component {
     render() {
         return (
             <header>

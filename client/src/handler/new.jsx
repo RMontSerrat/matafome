@@ -1,17 +1,23 @@
 import React from 'react';
 import { hashHistory, Link } from 'react-router'
 import Header from './header';
-import Generic from './model';
-import Ticket from './ticket';
+import {Default, Invert} from './model';
 import fetch from 'isomorphic-fetch';
+import {Ticket, ErrorBar} from './components';
 
-export default class New extends Generic {
+export default class New extends Default {
 	constructor(props, context) {
 		super(props);
         this.state = {
-            crd: this.getCoords(),
-            address: this.getAddress()
+            data: {
+                name: '',
+                vicinity: '',
+                crd: {},
+                types: []
+            }
         };
+
+        this.save = this.save.bind(this);
 	};
 	
 	componentDidMount() {
@@ -20,42 +26,47 @@ export default class New extends Generic {
 		this.renderMap();
 	};
 
-	getCurrentAddress(endereco) {
-		var that = this;
-		var geocoder = new google.maps.Geocoder();
-
-		geocoder.geocode({ 'address': endereco, 'region': 'BR' }, function (results, status) {
-			if (status == google.maps.GeocoderStatus.OK) {
-				if (results[0]) {
-					var crd = {
-						latitude: results[0].geometry.location.lat(),
-						longitude: results[0].geometry.location.lng()
-					};
-					that.setState({
-						crd: crd
-					}, that.save.bind(that))
-				}
-			}
-		});
+	getInputAddress() {
+        return document.querySelector('input[name="vicinity"]').value;
 	};
+
+    getInputName() {
+        return document.querySelector('input[name="name"]').value;
+    };
 
 	bindSubmit() {
 		var that = this;
+        var geocoder = new google.maps.Geocoder();
 
 		document.querySelector('form').addEventListener('submit', function (e) {
 			e.preventDefault();
-			var endereco = document.querySelector('input[name="vicinity"]').value;
-			that.getCurrentAddress(endereco);
+
+			var endereco = that.getInputAddress();
+            geocoder.geocode({ 'address': endereco, 'region': 'BR' }, function (results) {
+                if (results[0]) {
+                    var data = {
+                        name: that.getInputName(),
+                        vicinity: results[0].formatted_address,
+                        crd: {
+                            latitude: results[0].geometry.location.lat(),
+                            longitude: results[0].geometry.location.lng()
+                        },
+                        types: results[0].types
+                    };
+
+                    that.setState({data: data}, function() {
+                        that.save();
+                    });
+                }
+            });
 		});
 	};
 
 	renderMap() {
 		var latlng = new google.maps.LatLng(-22.9134, -43.2007);
-		var directionsDisplay = new google.maps.DirectionsRenderer();
 		var options = {
 			zoom: 17,
-			center: latlng,
-			mapTypeId: google.maps.MapTypeId.ROADMAP
+			center: latlng
 		};
 
 		var map = new google.maps.Map(document.getElementById('map2'), options);
@@ -86,7 +97,7 @@ export default class New extends Generic {
 	};
 
 	bindAutoComplete(map, marker) {
-		var input = document.querySelector("input[name='vicinity']");
+		var input = document.querySelector('input[name="vicinity"]');
 		var autocomplete = new google.maps.places.Autocomplete(input);
 		
 		autocomplete.addListener('place_changed', function() {
@@ -101,20 +112,9 @@ export default class New extends Generic {
 		});
 	};
 
-    getData() {
-        return {
-            name: document.querySelector('input[name="name"]').value,
-            vicinity: document.querySelector('input[name="vicinity"]').value,
-            location: {
-                lat: this.state.crd.latitude, 
-                lon: this.state.crd.longitude
-            }
-        };
-    };
-
 	save() {
 		var that = this;
-		var data = this.getData();
+		var data = this.state.data;
 		
         fetch(HOST + 'add/', {
 			method: 'POST',
@@ -130,8 +130,8 @@ export default class New extends Generic {
             } else {
                 that.context.router.push('/new/error');
             }
-        }, function(err) {
-            console.log(err);
+        })
+        .catch(function() {
             that.context.router.push({pathname: '/serverError'});
         })
 	};
@@ -146,18 +146,14 @@ export default class New extends Generic {
 					<input type="text" name="vicinity" placeholder="endereço" required="required" />
 					<div id="map2"></div>
 					<input type="submit" id="enviar" value="pronto!" />
-                    <a href="#" onClick={this.cancel.bind(this)}>cancelar</a>
+                    <a href="#" onClick={this.goBack}>cancelar</a>
 				</form>
 			</div>
 		)
 	};
 };
 
-export class ErrorNew extends Generic {
-	componentDidMount() {
-		this.invertColor();
-	};
-
+export class ErrorNew extends Invert {
 	render() {
 		return (
 		 <div className="feedback">
@@ -169,16 +165,15 @@ export class ErrorNew extends Generic {
 			<Link to="/new">
 				<button>adicionar podrão</button>
 			</Link>
+            <ErrorBar>
+                <Link to="/search">explorar podrões</Link>
+            </ErrorBar>
 		 </div>
 		)
 	}
 };
 
-export class SuccessNew extends Generic {
-	componentDidMount() {
-		this.invertColor();
-	};
-
+export class SuccessNew extends Invert {
 	render() {
 		return (
 		 <div className="feedback">

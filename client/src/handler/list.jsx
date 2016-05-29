@@ -1,9 +1,11 @@
 import React from 'react';
-import Header from './header';
-import Ticket from './ticket';
-import Generic from './model';
 import { Link } from 'react-router';
-import isEmpty from 'lodash/isEmpty';
+
+import Header from './header';
+import {Default, Invert} from './model';
+import {ErrorBar, Ticket} from './components';
+
+import {first, delay} from 'lodash';
 
 class Botao extends Ticket {
     constructor(props) {
@@ -17,111 +19,59 @@ class Botao extends Ticket {
     };
 };
 
-export default class List extends Generic {
+export default class List extends Invert {
     constructor(props, context) {
         super(props);
+        console.log(this.props.location.state.data);
         this.state = {
-            podrao: this.props.location.state ? this.props.location.state.data.podroes[0]._source : {}, 
-            i: 0,
-            address: this.getAddress()
+            data: _.first(this.props.location.state.data.podroes)._source, 
+            i: 0
         }
+
+        this.update = this.update.bind(this);
     };
 
     componentDidMount() {
-        this.verifyData();
         this.invertColor();
         this.renderMap();
     };
 
-    verifyData() {
-        if(isEmpty(this.state.podrao)) {
-            this.context.router.push({ pathname: '/search', search: '?lat=' + this.props.location.query.lat + '&lon=' + this.props.location.query.lon, state: {} });
-        };
+    componentDidUpdate() {
+        this.renderMap();
+    };
+
+    endData() {
+        return this.state.i >= this.props.location.state.data.podroes.length-1;
     };
 
     update() {
         var that = this;
         var i = this.state.i;
-
-        if(i >= this.props.location.state.data.podroes.length-1) {
+        
+        if(this.endData()) {
             this.context.router.push('/list/end');
             return;
         }
 
         this.setState({
-            podrao: this.props.location.state.data.podroes[i+1]._source,
+            data: this.props.location.state.data.podroes[i+1]._source,
             i: i+1
-        }, function () {
-            that.renderMap();
-        });
-    };
-
-    getCurrentAddress(directionsDisplay) {
-        var that = this;
-        var latlng = new google.maps.LatLng(this.props.location.query.lat, this.props.location.query.lon);
-        var geocoder = new google.maps.Geocoder();
-
-        geocoder.geocode({
-            "location": latlng
-        },
-        function(results, status) {
-            if (status == google.maps.GeocoderStatus.OK) {
-                var address = results[0].formatted_address;
-                
-                localStorage.setItem('address', JSON.stringify(address));
-                
-                that.setState({
-                    address: address
-                }, function () {
-                    that.renderRoute();
-                });
-            }
         });
     };
 
     renderMap() {
-        if(isEmpty(this.state.address)) {
-            this.getCurrentAddress();
-        } else {
-            this.renderRoute();
-        }
-    };
-
-    renderRoute(directionsDisplay) {
         var that = this;
-        var map;
+        var map = new google.maps.Map(document.getElementById('map'));
         var directionsDisplay = new google.maps.DirectionsRenderer();
-        var options = {
-            zoom: 18,
-            center: new google.maps.LatLng(this.props.location.query.lat, this.props.location.query.lon),
-            mapTypeId: google.maps.MapTypeId.ROADMAP
-        };
-         
-        map = new google.maps.Map(document.getElementById('map'), options);
         var directionsService = new google.maps.DirectionsService();
         var request = { 
-            origin: this.state.address,
-            destination: this.state.podrao.vicinity,
-            travelMode: google.maps.TravelMode.DRIVING
+            origin: new google.maps.LatLng(this.props.location.query.lat, this.props.location.query.lon),
+            destination: this.state.data.vicinity,
+            travelMode: google.maps.TravelMode.WALKING
         };
 
         directionsService.route(request, function(result, status) {
             if (status == google.maps.DirectionsStatus.OK) {
-                var leg = result.routes[0].legs[0];
-                var mStart = new google.maps.Marker({
-                    icon: '../../src/img/icone_local.png',
-                    position: leg.start_location,
-                    map: map,
-                    animation: google.maps.Animation.DROP
-                });
-
-                var mEnd = new google.maps.Marker({
-                    icon: '../../src/img/icone_mapa.png',
-                    position: leg.end_location,
-                    map: map,
-                    animation: google.maps.Animation.DROP
-                });
-
                 directionsDisplay.setDirections(result);
                 directionsDisplay.setOptions({
                     suppressMarkers: true,
@@ -131,13 +81,28 @@ export default class List extends Generic {
                         strokeColor:  '#ff002b'
                     }
                 });
+
                 directionsDisplay.setMap(map);
+                var leg = result.routes[0].legs[0];
+                that.renderMark(map, leg.start_location, '../../src/img/icone_local.png');
+                that.renderMark(map, leg.end_location, '../../src/img/icone_mapa.png');
             }
         });
     };
 
+    renderMark(map, position, icon) {
+        delay(function(){
+            new google.maps.Marker({
+                icon: icon,
+                position: position,
+                map: map,
+                animation: google.maps.Animation.DROP
+            });
+        }, 200);
+    };
+
     render() {
-        var podrao = this.state.podrao;
+        var podrao = this.state.data;
 
         return (
             <section className="card">
@@ -147,30 +112,27 @@ export default class List extends Generic {
                     <p>{podrao.vicinity}</p>
                     <Ticket array={TICKET.good} /> 
                </div>
-               <Botao onClick={this.update.bind(this)} array={TICKET.button} />
+               <Botao onClick={this.update} array={TICKET.button} />
                 <div id="map"></div>
             </section>
         )
     };
 };
 
-export class EndList extends Generic {
-    componentDidMount() {
-        this.resetColor();
-    };
-
+export class EndList extends Default {
     render() {
         return (
-         <div className="feedback">
-            <Header />
-            <Ticke array={TICKET.bad} />
-            <h2>
-               <span>não existem mais podrões próximos</span>
-            </h2>
-            <Link to="/search">
-                <button>explorar podrões</button>
-            </Link>
-         </div>
+            <div className="feedback">
+                <Header />
+                <Ticket array={TICKET.bad} />
+                <h2>
+                   <span>não existem mais podrões próximos</span>
+                </h2>
+                <Link to="/search">
+                    <button>explorar podrões</button>
+                </Link>
+                <ErrorBar />
+            </div>
         )
     }
 };

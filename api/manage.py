@@ -3,7 +3,7 @@ import json
 from flask import Flask, request, render_template, jsonify
 from flask.ext.cors import CORS
 from filter_esearch import search_podroes
-from commands.esearch import save, update, create_index
+from esearch import save, update, create_index
 from elasticsearch import Elasticsearch
 
 app = Flask(__name__)
@@ -25,20 +25,17 @@ def podroes():
 @app.route("/add/", methods=['GET', 'POST'])
 def new_podrao():
 	if request.method == "POST":
-		save(data=request.json)
-	return "Podrão adicionado com sucesso :)"
+		return save(data=request.json)
 
 @app.route("/like/", methods=['GET', 'POST'])
 def likes():
 	if request.method == "POST":
-		update(id=request.json["id"], field="likes")
-		return ""
+		return update(id=request.json["id"], field="likes")
 
 @app.route("/complaint/", methods=['GET', 'POST'])
 def complaint():
 	if request.method == "POST":
-		update(id=request.json["id"], field="complaint")
-		return ""
+		return update(id=request.json["id"], field="complaint")
 
 def flaskrun(app, debug=True, port="5000"):
 	if not es.indices.exists(index="matafome"):

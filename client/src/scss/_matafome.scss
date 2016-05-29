@@ -57,7 +57,7 @@ body {
       color: $yellow;
       background-color: $red;
       #container {
-         p, li, h1, h2, h3, span, .icon-logo, .icon-new {
+         p, li, h1, h2, h3, span, a, a:focus, .icon-logo, .icon-new {
             color: $yellow;
          }
          button, button:hover, button:focus, input[type="submit"] {
@@ -227,6 +227,13 @@ body {
          }
       }
    }
+
+   .feedback {
+      .ticket-card {
+         right: 14.5rem;
+      }  
+   }
+
    .ticket-card {
       width: 2.5rem;
       height: 2.5rem;
@@ -269,6 +276,18 @@ body {
    .home {
       button {
          margin: 0 auto;
+      }
+   }
+
+   .error-bar {
+      text-align: left;
+      padding-top: 2rem;
+      a, span {
+         font-size: .8rem;
+         font-family: $gothan;
+      }
+      span {
+         padding: 0 .8rem;
       }
    }
 }

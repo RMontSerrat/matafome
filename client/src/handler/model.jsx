@@ -3,10 +3,8 @@ import React from 'react';
 export default class Generic extends React.Component {
     constructor(props, context) {
         super(props);
-    };
 
-    componentDidMount() {
-        this.resetColor();
+        this.goBack = this.goBack.bind(this);
     };
 
     resetColor() {
@@ -19,21 +17,21 @@ export default class Generic extends React.Component {
         body.classList.add('invert');
     };
 
-    getCoords() {
-        if (localStorage.crd) {
-            return JSON.parse(localStorage.crd);
-        }
-    };
-
-    getAddress() {
-        if (localStorage.address) {
-            return JSON.parse(localStorage.address);
-        }
-    };
-
-    cancel(e) {
+    goBack(e) {
         e.preventDefault();
         this.context.router.goBack();
+    };
+};
+
+export class Default extends Generic {
+    componentDidMount() {
+        this.resetColor();
+    };
+};
+
+export class Invert extends Generic {
+    componentDidMount() {
+        this.invertColor();
     };
 };
 

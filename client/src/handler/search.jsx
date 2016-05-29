@@ -1,9 +1,10 @@
 import React from 'react';
 import Header from './header';
 import Generic from './model';
-import Ticket from './ticket';
+import {Ticket, ErrorBar} from './components';
 import fetch from 'isomorphic-fetch';
 import isEmpty from 'lodash/isEmpty';
+import { Link } from 'react-router';
 
 export default class Search extends Generic {
     constructor(props, context) {
@@ -11,6 +12,9 @@ export default class Search extends Generic {
         this.state = {
             crd: this.getCoords()
         }
+
+        this.successSetCoordinates = this.successSetCoordinates.bind(this);
+        this.errorSetCoordinates = this.errorSetCoordinates.bind(this);
     };
 
     componentDidMount() {
@@ -18,14 +22,14 @@ export default class Search extends Generic {
         this.resetColor();
     };
 
-    setCoordinates() {
+    setCoords() {
         var options = {
-            enableHighAccuracy: false,
-            timeout: 10000,
-            maximumAge: 600000
+            enableHighAccuracy: true,
+            timeout: 5000,
+            maximumAge: 0
         };
 
-        navigator.geolocation.getCurrentPosition(this.successSetCoordinates.bind(this), this.errorSetCoordinates.bind(this), options);
+        navigator.geolocation.getCurrentPosition(this.successSetCoordinates, this.errorSetCoordinates, options);
     };
 
     successSetCoordinates(pos) {
@@ -34,7 +38,6 @@ export default class Search extends Generic {
             longitude: pos.coords.longitude
         };
 
-        localStorage.setItem('crd', JSON.stringify(crd));
         this.setState({crd: crd}, function() {
             this.fetchData();
         });
@@ -44,23 +47,23 @@ export default class Search extends Generic {
         this.context.router.push({ pathname: '/search/error'});
     };
 
-    getLocation() {
+    getCoords() {
         if (!isEmpty(this.props.location.query)) {
             return {   
                 latitude: this.props.location.query.lat, 
                 longitude: this.props.location.query.lon
             }
         }
-        
-        return this.state.crd;
+
+        return {}
     };
 
     fetchData() {
         var that = this;
-        var crd = this.getLocation();
+        var crd = this.state.crd;
 
-        if (!crd) {
-            this.setCoordinates();
+        if (isEmpty(crd)) {
+            this.setCoords();
             return;
         }
 
@@ -71,13 +74,13 @@ export default class Search extends Generic {
             if (response.status >= 400) {
                 that.context.router.push({pathname: '/serverError'})
             }
-            return response.json();
-        }, function(err) {
-            console.log(err);
-            that.context.router.push({pathname: '/serverError'})
+            return response.json()
         })
         .then(function(data) {
             that.renderMode(crd, data);
+        })
+        .catch(function() {
+            that.context.router.push({pathname: '/serverError'})
         })
     };
 
@@ -96,6 +99,7 @@ export default class Search extends Generic {
                 <h2 className="loading">
                     <span>procurando podrões bem, bem gordurosos</span>
                 </h2>
+                <ErrorBar />
             </div>
         )
     };
@@ -118,7 +122,6 @@ export class ErrorSearch extends Generic {
         
         autocomplete.addListener('place_changed', function() {
             var place = autocomplete.getPlace();
-            var address = input.value;
             
             if (!place.geometry) {
                 return;
@@ -128,9 +131,6 @@ export class ErrorSearch extends Generic {
                 latitude: place.geometry.location.lat(),
                 longitude: place.geometry.location.lng()
             };
-
-            localStorage.setItem('address', JSON.stringify(address));
-            localStorage.setItem('crd', JSON.stringify(crd));
 
             that.context.router.push({ pathname: '/search', search: '?lat=' + crd.latitude + '&lon=' + crd.longitude, state: {} });
         });
@@ -147,6 +147,10 @@ export class ErrorSearch extends Generic {
             <form>
                 <input type="text" name="vicinity" placeholder="escreva aqui" />
             </form>
+            <ErrorBar>
+                <span> / </span>
+                <Link to="/search">tentar de novo</Link>
+            </ErrorBar>
          </div>
         )
     }
