@@ -18,7 +18,7 @@ render((
         <Route path="list">
             <IndexRoute component={List} />
             <Route path="end" component={EndList} />
-        </Route> 
+        </Route>
         <Route path="new">
             <IndexRoute component={New} />
             <Route path="error" component={ErrorNew} />

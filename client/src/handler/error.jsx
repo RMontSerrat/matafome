@@ -9,7 +9,7 @@ export default class ServerError extends Invert {
         return (
          <div className="feedback">
             <Header />
-            <Ticket array={TICKET.bad} />
+            <Ticket data={TICKET.bad} />
             <h2>
                <span>deu ruim, erro no servidor. Tenta de novo!</span>
             </h2>

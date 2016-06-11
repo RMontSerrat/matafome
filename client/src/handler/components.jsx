@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
 
 export class Ticket extends React.Component {
@@ -10,7 +10,7 @@ export class Ticket extends React.Component {
     };
 
     setTicketValue() {
-        return this.props.array[Math.floor(Math.random() * this.props.array.length)]
+        return this.props.data[Math.floor(Math.random() * this.props.data.length)]
     };
 
     componentDidMount() {
@@ -33,6 +33,10 @@ export class Ticket extends React.Component {
             </div>
         )
     };
+};
+
+Ticket.PropTypes = {
+    data: PropTypes.array.isRequired,
 };
 
 export class ErrorBar extends React.Component {

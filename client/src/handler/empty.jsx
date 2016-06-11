@@ -9,7 +9,7 @@ export default class Empty extends Invert {
         return (
              <div className="feedback">
                 <Header />
-                <Ticket array={TICKET.bad} />
+                <Ticket data={TICKET.bad} />
                 <h2>
                     <span>não achamos nenhum perto de você :(</span>
                     <Link to="/new">
@@ -21,6 +21,6 @@ export default class Empty extends Invert {
                     </ErrorBar>
                 </h2>
              </div>
-      )
+        )
     };
 };

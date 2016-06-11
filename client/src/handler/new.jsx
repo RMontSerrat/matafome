@@ -19,7 +19,7 @@ export default class New extends Default {
 
         this.save = this.save.bind(this);
 	};
-	
+
 	componentDidMount() {
         this.resetColor();
 		this.bindSubmit();
@@ -84,7 +84,7 @@ export default class New extends Default {
 
 	bindDragMap(marker) {
 		var geocoder = new google.maps.Geocoder();
-			
+
 		google.maps.event.addListener(marker, 'drag', function () {
 			geocoder.geocode({ 'latLng': marker.getPosition() }, function (results, status) {
 				if (status == google.maps.GeocoderStatus.OK) {
@@ -99,7 +99,7 @@ export default class New extends Default {
 	bindAutoComplete(map, marker) {
 		var input = document.querySelector('input[name="vicinity"]');
 		var autocomplete = new google.maps.places.Autocomplete(input);
-		
+
 		autocomplete.addListener('place_changed', function() {
 		   var place = autocomplete.getPlace();
 		   if (!place.geometry) {
@@ -115,7 +115,7 @@ export default class New extends Default {
 	save() {
 		var that = this;
 		var data = this.state.data;
-		
+
         fetch(HOST + 'add/', {
 			method: 'POST',
             headers: {
@@ -158,7 +158,7 @@ export class ErrorNew extends Invert {
 		return (
 		 <div className="feedback">
 			<Header />
-			<Ticket array={TICKET.bad} />
+			<Ticket data={TICKET.bad} />
 			<h2>
 			   <span>eita, deu ruim, tenta adicionar de novo?</span>
 			</h2>
@@ -178,7 +178,7 @@ export class SuccessNew extends Invert {
 		return (
 		 <div className="feedback">
 			<Header />
-			<Ticket array={TICKET.good} />
+			<Ticket data={TICKET.good} />
 			<h2>
 			   <span>oba! podrão novo na área. obrigado!</span>
 			</h2>

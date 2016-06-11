@@ -11,7 +11,7 @@ query = {
 			"query": {
 				"match_all": {}
 			},
-			"filter": {}               
+			"filter": {}
 		}
 	},
 	"sort": [
@@ -19,13 +19,13 @@ query = {
 	      	"_geo_distance": {
 		        "location": [],
 		        "order":         "asc",
-		        "unit":          "km", 
-		        "distance_type": "plane" 
+		        "unit":          "km",
+		        "distance_type": "plane"
       		}
     	}
   	],
 	"size": per_page,
-	"from": 0 
+	"from": 0
 }
 
 def pop_filter():
@@ -44,18 +44,18 @@ def filter_distance(lat, lon):
 
 def search_podroes(args):
 	pop_filter()
-  	
+
   	if args["lat"] and args["lon"]:
   		filter_distance(args["lat"], args["lon"])
 		filter_sort(args["lat"], args["lon"])
-	
+
 	query["size"] = per_page
 	if args["page"] > 1:
 		query["from"] = (args["page"] - 1) * per_page
 	else:
 		query["from"] = 0
 
-	res = es.search(index=args["index"], 
+	res = es.search(index=args["index"],
 				  body=query)
 
 	count = res["hits"]["total"]

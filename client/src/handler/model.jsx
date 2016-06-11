@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 
 export default class Generic extends React.Component {
     constructor(props, context) {
@@ -8,12 +8,12 @@ export default class Generic extends React.Component {
     };
 
     resetColor() {
-        var body = document.getElementsByTagName('body')[0]; 
+        var body = document.getElementsByTagName('body')[0];
         body.classList.remove('invert');
     };
 
     invertColor() {
-        var body = document.getElementsByTagName('body')[0]; 
+        var body = document.getElementsByTagName('body')[0];
         body.classList.add('invert');
     };
 
@@ -21,6 +21,10 @@ export default class Generic extends React.Component {
         e.preventDefault();
         this.context.router.goBack();
     };
+};
+
+Generic.contextTypes = {
+    router: PropTypes.object
 };
 
 export class Default extends Generic {
@@ -33,8 +37,4 @@ export class Invert extends Generic {
     componentDidMount() {
         this.invertColor();
     };
-};
-
-Generic.contextTypes = {
-    router: React.PropTypes.object
 };

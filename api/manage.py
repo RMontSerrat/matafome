@@ -40,7 +40,7 @@ def complaint():
 def flaskrun(app, debug=True, port="5000"):
 	if not es.indices.exists(index="matafome"):
 		create_index(index="matafome")
-	
+
 	app.run(debug=debug, port=int(port))
 
 if __name__ == '__main__':

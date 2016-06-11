@@ -22,9 +22,8 @@ class Botao extends Ticket {
 export default class List extends Invert {
     constructor(props, context) {
         super(props);
-        console.log(this.props.location.state.data);
         this.state = {
-            data: _.first(this.props.location.state.data.podroes)._source, 
+            data: _.first(this.props.location.state.data.podroes)._source,
             i: 0
         }
 
@@ -47,7 +46,7 @@ export default class List extends Invert {
     update() {
         var that = this;
         var i = this.state.i;
-        
+
         if(this.endData()) {
             this.context.router.push('/list/end');
             return;
@@ -64,7 +63,7 @@ export default class List extends Invert {
         var map = new google.maps.Map(document.getElementById('map'));
         var directionsDisplay = new google.maps.DirectionsRenderer();
         var directionsService = new google.maps.DirectionsService();
-        var request = { 
+        var request = {
             origin: new google.maps.LatLng(this.props.location.query.lat, this.props.location.query.lon),
             destination: this.state.data.vicinity,
             travelMode: google.maps.TravelMode.WALKING
@@ -110,9 +109,9 @@ export default class List extends Invert {
                 <div className="card-informations">
                     <h1>{podrao.name}</h1>
                     <p>{podrao.vicinity}</p>
-                    <Ticket array={TICKET.good} /> 
+                    <Ticket data={TICKET.good} />
                </div>
-               <Botao onClick={this.update} array={TICKET.button} />
+               <Botao onClick={this.update} data={TICKET.button} />
                 <div id="map"></div>
             </section>
         )
@@ -124,7 +123,7 @@ export class EndList extends Default {
         return (
             <div className="feedback">
                 <Header />
-                <Ticket array={TICKET.bad} />
+                <Ticket data={TICKET.bad} />
                 <h2>
                    <span>não existem mais podrões próximos</span>
                 </h2>

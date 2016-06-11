@@ -5,7 +5,7 @@ from elasticsearch import Elasticsearch
 
 es = Elasticsearch()
 
-mapping = {    
+mapping = {
 	"settings": {
 	"number_of_shards": 1,
 	"number_of_replicas": 0
@@ -49,7 +49,7 @@ def save(data):
 	 if 'street_address' in data['types'] or 'route' in data['types']:
 			body = get_obj(data)
 			index_elasticsearch(body)
-			
+
 			return json.dumps({'OK': True})
 
 def index_elasticsearch(body):

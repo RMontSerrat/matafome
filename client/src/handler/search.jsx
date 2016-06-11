@@ -18,8 +18,8 @@ export default class Search extends Generic {
     };
 
     componentDidMount() {
-        this.fetchData();
         this.resetColor();
+        this.fetchData();
     };
 
     setCoords() {
@@ -49,8 +49,8 @@ export default class Search extends Generic {
 
     getCoords() {
         if (!isEmpty(this.props.location.query)) {
-            return {   
-                latitude: this.props.location.query.lat, 
+            return {
+                latitude: this.props.location.query.lat,
                 longitude: this.props.location.query.lon
             }
         }
@@ -68,7 +68,7 @@ export default class Search extends Generic {
         }
 
         var url = HOST + '?lat=' + crd.latitude + '&lon=' + crd.longitude;
-        
+
         fetch(url)
         .then(function(response) {
             if (response.status >= 400) {
@@ -119,14 +119,14 @@ export class ErrorSearch extends Generic {
         var that = this;
         var input = document.querySelector("input[name='vicinity']");
         var autocomplete = new google.maps.places.Autocomplete(input);
-        
+
         autocomplete.addListener('place_changed', function() {
             var place = autocomplete.getPlace();
-            
+
             if (!place.geometry) {
                 return;
             }
-            
+
             var crd = {
                 latitude: place.geometry.location.lat(),
                 longitude: place.geometry.location.lng()
@@ -140,7 +140,7 @@ export class ErrorSearch extends Generic {
         return (
          <div className="feedback">
             <Header />
-            <Ticket array={TICKET.bad} />
+            <Ticket data={TICKET.bad} />
             <h2>
                <span>deu ruim, não te achamos. onde vc tá?</span>
             </h2>
