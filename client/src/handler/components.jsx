@@ -5,7 +5,7 @@ export class Ticket extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            ticketValue: ''
+            value: ''
         };
     };
 
@@ -15,13 +15,13 @@ export class Ticket extends React.Component {
 
     componentDidMount() {
         this.setState({
-            ticketValue: this.setTicketValue()
+            value: this.setTicketValue()
         });
     };
 
     componentWillReceiveProps() {
         this.setState({
-            ticketValue: this.setTicketValue()
+            value: this.setTicketValue()
         });
     };
 
@@ -29,7 +29,7 @@ export class Ticket extends React.Component {
         return (
             <div className="ticket ticket-card">
                 <i className="icon-decagono"></i>
-                <p><span>{this.state.ticketValue}</span></p>
+                <p><span>{this.state.value}</span></p>
             </div>
         )
     };
